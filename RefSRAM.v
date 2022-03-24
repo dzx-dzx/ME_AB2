@@ -1,3 +1,4 @@
+`include "sadslspkb1p24x64m4b1w0cp0d0t0_fast_func.v"
 // Cold boot requires 69 cycles
 
 module RefSRAM (
@@ -48,12 +49,12 @@ module RefSRAM (
             sram_write <= 0;
         end
         else begin
-            if (addr == 5'h22) begin
+            if (addr == 5'd22) begin
                 sram_write <= (sram_write == 4'b1000) ? 4'b0001 : sram_write << 1;
                 addr       <= 0;
             end
             else begin
-                addr += 1;
+                addr <= addr + 1;
             end
         end
     end
