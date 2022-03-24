@@ -39,24 +39,24 @@ module RefSRAM (
     assign ref_out = we_1 ? {q_2, q_3, q_4[63:8]}
         :we_2 ? {q_3, q_4, q_1[63:8]}
         :we_3 ? {q_4, q_1, q_2[63:8]}
-        :{q_1, q_2, q_3[63:8]}
+        :{q_1, q_2, q_3[63:8]};
 
-        // All SRAM share the same address
-        always @(posedge clk or posedge rst) begin
-            if (rst || next_line) begin
+    // All SRAM share the same address
+    always @(posedge clk or posedge rst) begin
+        if (rst || next_line) begin
+            addr       <= 0;
+            sram_write <= 0;
+        end
+        else begin
+            if (addr == 5'h22) begin
+                sram_write <= (sram_write == 4'b1000) ? 4'b0001 : sram_write << 1;
                 addr       <= 0;
-                sram_write <= 0;
             end
             else begin
-                if (addr == 5'h22) begin
-                    sram_write <= (sram_write == 4'b1000) ? 4'b0001 : sram_write << 1;
-                    addr       <= 0;
-                end
-                else begin
-                    addr += 1;
-                end
+                addr += 1;
             end
         end
+    end
 
     // First time write sram_4 => Sram is ready
     always @(posedge clk or posedge rst) begin
