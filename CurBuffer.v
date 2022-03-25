@@ -4,10 +4,10 @@ module CurBuffer (
     input               next_block, // To send the next_block
     input               read_en   ,
     input  wire [ 31:0] cur_in    , // 4 pixels
-    output wire [511:0] cur_out   , // 8*8 pixels
+    output wire [511:0] cur_out     // 8*8 pixels
 );
 
-    reg [7:0] cur_buffer[0:127]; // 128 * 1 pixels
+    reg [1023:0] cur_buffer; // 128 * 1 pixels
 
     reg [6:0] addr;
 
@@ -27,18 +27,20 @@ module CurBuffer (
     assign cur_out = {out_row_8, out_row_7, out_row_6, out_row_5,
         out_row_4, out_row_3, out_row_2, out_row_1};
 
+    genvar i;
+
+    generate
+        for (i = 0; i < 32; i = i + 1)
+            always @ (*) begin
+                cur_buffer[addr+i] <= cur_in[i];
+            end
+    endgenerate
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            cur_buffer <= 0;
-            addr       <= 0;
+            addr <= 0;
         end
         else if (read_en) begin
-            cur_buffer[addr]   <= cur_in[7:0];
-            cur_buffer[addr+1] <= cur_in[15:8];
-            cur_buffer[addr+2] <= cur_in[23:16];
-            cur_buffer[addr+3] <= cur_in[31:24];
-
             addr <= addr + 4;
         end
     end
@@ -66,190 +68,190 @@ module CurBuffer (
         case ({half, at_inter, inter_cnt})
             // At left half
             5'b00000 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= cur_buffer[16:23];
-                out_row_4 <= cur_buffer[24:31];
-                out_row_5 <= cur_buffer[32:39];
-                out_row_6 <= cur_buffer[40:47];
-                out_row_7 <= cur_buffer[48:55];
-                out_row_8 <= cur_buffer[56:63];
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= cur_buffer[191 : 128];
+                out_row_4 <= cur_buffer[255 : 192];
+                out_row_5 <= cur_buffer[319 : 256];
+                out_row_6 <= cur_buffer[383 : 320];
+                out_row_7 <= cur_buffer[447 : 384];
+                out_row_8 <= cur_buffer[511 : 448];
             end
 
             // New half is the left one.
             5'b01000 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= {cur_buffer[72], cur_buffer[9:15]};
-                out_row_3 <= {cur_buffer[80:81], cur_buffer[18:23]};
-                out_row_4 <= {cur_buffer[88:90], cur_buffer[27:31]};
-                out_row_5 <= {cur_buffer[96:99], cur_buffer[36:39]};
-                out_row_6 <= {cur_buffer[104:108], cur_buffer[45:47]};
-                out_row_7 <= {cur_buffer[112:117], cur_buffer[54:55]};
-                out_row_8 <= {cur_buffer[120:126], cur_buffer[63]};
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= {cur_buffer[583 : 576], cur_buffer[127 : 72]};
+                out_row_3 <= {cur_buffer[655 : 640], cur_buffer[191 : 144]};
+                out_row_4 <= {cur_buffer[727 : 704], cur_buffer[255 : 216]};
+                out_row_5 <= {cur_buffer[799 : 768], cur_buffer[319 : 288]};
+                out_row_6 <= {cur_buffer[871 : 832], cur_buffer[383 : 360]};
+                out_row_7 <= {cur_buffer[943 : 896], cur_buffer[447 : 432]};
+                out_row_8 <= {cur_buffer[1015 : 960], cur_buffer[511 : 504]};
             end
             5'b01001 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= {cur_buffer[80], cur_buffer[17:23]};
-                out_row_4 <= {cur_buffer[88:89], cur_buffer[26:31]};
-                out_row_5 <= {cur_buffer[96:98], cur_buffer[35:39]};
-                out_row_6 <= {cur_buffer[104:107], cur_buffer[44:47]};
-                out_row_7 <= {cur_buffer[112:116], cur_buffer[53:55]};
-                out_row_8 <= {cur_buffer[120:125], cur_buffer[62:63]};
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= {cur_buffer[647 : 640], cur_buffer[191 : 136]};
+                out_row_4 <= {cur_buffer[719 : 704], cur_buffer[255 : 208]};
+                out_row_5 <= {cur_buffer[791 : 768], cur_buffer[319 : 280]};
+                out_row_6 <= {cur_buffer[863 : 832], cur_buffer[383 : 352]};
+                out_row_7 <= {cur_buffer[935 : 896], cur_buffer[447 : 424]};
+                out_row_8 <= {cur_buffer[1007 : 960], cur_buffer[511 : 496]};
             end
             5'b01010 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= cur_buffer[16:23];
-                out_row_4 <= {cur_buffer[88], cur_buffer[25:31]};
-                out_row_5 <= {cur_buffer[96:97], cur_buffer[34:39]};
-                out_row_6 <= {cur_buffer[104:106], cur_buffer[43:47]};
-                out_row_7 <= {cur_buffer[112:115], cur_buffer[52:55]};
-                out_row_8 <= {cur_buffer[120:124], cur_buffer[61:63]};
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= cur_buffer[191 : 128];
+                out_row_4 <= {cur_buffer[711 : 704], cur_buffer[255 : 200]};
+                out_row_5 <= {cur_buffer[783 : 768], cur_buffer[319 : 272]};
+                out_row_6 <= {cur_buffer[855 : 832], cur_buffer[383 : 344]};
+                out_row_7 <= {cur_buffer[927 : 896], cur_buffer[447 : 416]};
+                out_row_8 <= {cur_buffer[999 : 960], cur_buffer[511 : 488]};
             end
             5'b01011 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= cur_buffer[16:23];
-                out_row_4 <= cur_buffer[24:31];
-                out_row_5 <= {cur_buffer[96], cur_buffer[33:39]};
-                out_row_6 <= {cur_buffer[104:105], cur_buffer[42:47]};
-                out_row_7 <= {cur_buffer[112:114], cur_buffer[51:55]};
-                out_row_8 <= {cur_buffer[120:123], cur_buffer[60:63]};
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= cur_buffer[191 : 128];
+                out_row_4 <= cur_buffer[255 : 192];
+                out_row_5 <= {cur_buffer[775 : 768], cur_buffer[319 : 264]};
+                out_row_6 <= {cur_buffer[847 : 832], cur_buffer[383 : 336]};
+                out_row_7 <= {cur_buffer[919 : 896], cur_buffer[447 : 408]};
+                out_row_8 <= {cur_buffer[991 : 960], cur_buffer[511 : 480]};
             end
             5'b01100 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= cur_buffer[16:23];
-                out_row_4 <= cur_buffer[24:31];
-                out_row_5 <= cur_buffer[32:39];
-                out_row_6 <= {cur_buffer[104], cur_buffer[41:47]};
-                out_row_7 <= {cur_buffer[112:113], cur_buffer[50:55]};
-                out_row_8 <= {cur_buffer[120:122], cur_buffer[59:63]};
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= cur_buffer[191 : 128];
+                out_row_4 <= cur_buffer[255 : 192];
+                out_row_5 <= cur_buffer[319 : 256];
+                out_row_6 <= {cur_buffer[839 : 832], cur_buffer[383 : 328]};
+                out_row_7 <= {cur_buffer[911 : 896], cur_buffer[447 : 400]};
+                out_row_8 <= {cur_buffer[983 : 960], cur_buffer[511 : 472]};
             end
             5'b01101 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= cur_buffer[16:23];
-                out_row_4 <= cur_buffer[24:31];
-                out_row_5 <= cur_buffer[32:39];
-                out_row_6 <= cur_buffer[40:47];
-                out_row_7 <= {cur_buffer[112], cur_buffer[49:55]};
-                out_row_8 <= {cur_buffer[120:121], cur_buffer[58:63]};
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= cur_buffer[191 : 128];
+                out_row_4 <= cur_buffer[255 : 192];
+                out_row_5 <= cur_buffer[319 : 256];
+                out_row_6 <= cur_buffer[383 : 320];
+                out_row_7 <= {cur_buffer[903 : 896], cur_buffer[447 : 392]};
+                out_row_8 <= {cur_buffer[975 : 960], cur_buffer[511 : 464]};
             end
             5'b01110 : begin
-                ut_row_1  <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= cur_buffer[16:23];
-                out_row_4 <= cur_buffer[24:31];
-                out_row_5 <= cur_buffer[32:39];
-                out_row_6 <= cur_buffer[40:47];
-                out_row_7 <= cur_buffer[48:55];
-                out_row_8 <= {cur_buffer[120], cur_buffer[57:63]};
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= cur_buffer[191 : 128];
+                out_row_4 <= cur_buffer[255 : 192];
+                out_row_5 <= cur_buffer[319 : 256];
+                out_row_6 <= cur_buffer[383 : 320];
+                out_row_7 <= cur_buffer[447 : 384];
+                out_row_8 <= {cur_buffer[967 : 960], cur_buffer[511 : 456]};
             end
             5'b01111 : begin
-                out_row_1 <= cur_buffer[0:7];
-                out_row_2 <= cur_buffer[8:15];
-                out_row_3 <= cur_buffer[16:23];
-                out_row_4 <= cur_buffer[24:31];
-                out_row_5 <= cur_buffer[32:39];
-                out_row_6 <= cur_buffer[40:47];
-                out_row_7 <= cur_buffer[48:55];
-                out_row_8 <= cur_buffer[56:63];
+                out_row_1 <= cur_buffer[63 : 0];
+                out_row_2 <= cur_buffer[127 : 64];
+                out_row_3 <= cur_buffer[191 : 128];
+                out_row_4 <= cur_buffer[255 : 192];
+                out_row_5 <= cur_buffer[319 : 256];
+                out_row_6 <= cur_buffer[383 : 320];
+                out_row_7 <= cur_buffer[447 : 384];
+                out_row_8 <= cur_buffer[511 : 448];
             end
 
             // At right half
             5'b10000 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= cur_buffer[80:87];
-                out_row_4 <= cur_buffer[88:95];
-                out_row_5 <= cur_buffer[96:103];
-                out_row_6 <= cur_buffer[104:111];
-                out_row_7 <= cur_buffer[112:119];
-                out_row_8 <= cur_buffer[120:127];
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= cur_buffer[703 : 640];
+                out_row_4 <= cur_buffer[767 : 704];
+                out_row_5 <= cur_buffer[831 : 768];
+                out_row_6 <= cur_buffer[895 : 832];
+                out_row_7 <= cur_buffer[959 : 896];
+                out_row_8 <= cur_buffer[1023 : 960];
             end
 
             // New half is right
             5'b11000 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= {cur_buffer[8] ,cur_buffer[73:79]};
-                out_row_3 <= {cur_buffer[16:17] ,cur_buffer[82:87]};
-                out_row_4 <= {cur_buffer[24:26] ,cur_buffer[91:95]};
-                out_row_5 <= {cur_buffer[32:35] ,cur_buffer[100:103]};
-                out_row_6 <= {cur_buffer[40:44] ,cur_buffer[109:111]};
-                out_row_7 <= {cur_buffer[48:53] ,cur_buffer[118:119]};
-                out_row_8 <= {cur_buffer[56:62] ,cur_buffer[127]};
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= {cur_buffer[71 : 64] ,cur_buffer[639 : 584]};
+                out_row_3 <= {cur_buffer[143 : 128] ,cur_buffer[703 : 656]};
+                out_row_4 <= {cur_buffer[215 : 192] ,cur_buffer[767 : 728]};
+                out_row_5 <= {cur_buffer[287 : 256] ,cur_buffer[831 : 800]};
+                out_row_6 <= {cur_buffer[359 : 320] ,cur_buffer[895 : 872]};
+                out_row_7 <= {cur_buffer[431 : 384] ,cur_buffer[959 : 944]};
+                out_row_8 <= {cur_buffer[503 : 448] ,cur_buffer[1023 : 1016]};
             end
             5'b11001 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= {cur_buffer[16] ,cur_buffer[81:87]};
-                out_row_4 <= {cur_buffer[24:25] ,cur_buffer[90:95]};
-                out_row_5 <= {cur_buffer[32:34] ,cur_buffer[99:103]};
-                out_row_6 <= {cur_buffer[40:43] ,cur_buffer[108:111]};
-                out_row_7 <= {cur_buffer[48:52] ,cur_buffer[117:119]};
-                out_row_8 <= {cur_buffer[56:61] ,cur_buffer[126:127]};
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= {cur_buffer[135 : 128] ,cur_buffer[703 : 648]};
+                out_row_4 <= {cur_buffer[207 : 192] ,cur_buffer[767 : 720]};
+                out_row_5 <= {cur_buffer[279 : 256] ,cur_buffer[831 : 792]};
+                out_row_6 <= {cur_buffer[351 : 320] ,cur_buffer[895 : 864]};
+                out_row_7 <= {cur_buffer[423 : 384] ,cur_buffer[959 : 936]};
+                out_row_8 <= {cur_buffer[495 : 448] ,cur_buffer[1023 : 1008]};
             end
             5'b11010 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= cur_buffer[80:87];
-                out_row_4 <= {cur_buffer[24] ,cur_buffer[89:95]};
-                out_row_5 <= {cur_buffer[32:33] ,cur_buffer[98:103]};
-                out_row_6 <= {cur_buffer[40:42] ,cur_buffer[107:111]};
-                out_row_7 <= {cur_buffer[48:51] ,cur_buffer[116:119]};
-                out_row_8 <= {cur_buffer[56:60] ,cur_buffer[125:127]};
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= cur_buffer[703 : 640];
+                out_row_4 <= {cur_buffer[199 : 192] ,cur_buffer[767 : 712]};
+                out_row_5 <= {cur_buffer[271 : 256] ,cur_buffer[831 : 784]};
+                out_row_6 <= {cur_buffer[343 : 320] ,cur_buffer[895 : 856]};
+                out_row_7 <= {cur_buffer[415 : 384] ,cur_buffer[959 : 928]};
+                out_row_8 <= {cur_buffer[487 : 448] ,cur_buffer[1023 : 1000]};
             end
             5'b11011 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= cur_buffer[80:87];
-                out_row_4 <= ,cur_buffer[88:95];
-                out_row_5 <= {cur_buffer[32] ,cur_buffer[97:103]};
-                out_row_6 <= {cur_buffer[40:41] ,cur_buffer[106:111]};
-                out_row_7 <= {cur_buffer[48:50] ,cur_buffer[115:119]};
-                out_row_8 <= {cur_buffer[56:59] ,cur_buffer[124:127]};
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= cur_buffer[703 : 640];
+                out_row_4 <= cur_buffer[767 : 704];
+                out_row_5 <= {cur_buffer[263 : 256] ,cur_buffer[831 : 776]};
+                out_row_6 <= {cur_buffer[335 : 320] ,cur_buffer[895 : 848]};
+                out_row_7 <= {cur_buffer[407 : 384] ,cur_buffer[959 : 920]};
+                out_row_8 <= {cur_buffer[479 : 448] ,cur_buffer[1023 : 992]};
             end
             5'b11100 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= cur_buffer[80:87];
-                out_row_4 <= cur_buffer[88:95];
-                out_row_5 <= cur_buffer[96:103];
-                out_row_6 <= {cur_buffer[40] ,cur_buffer[105:111]};
-                out_row_7 <= {cur_buffer[48:49] ,cur_buffer[114:119]};
-                out_row_8 <= {cur_buffer[56:58] ,cur_buffer[123:127]};
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= cur_buffer[703 : 640];
+                out_row_4 <= cur_buffer[767 : 704];
+                out_row_5 <= cur_buffer[831 : 768];
+                out_row_6 <= {cur_buffer[327 : 320] ,cur_buffer[895 : 840]};
+                out_row_7 <= {cur_buffer[399 : 384] ,cur_buffer[959 : 912]};
+                out_row_8 <= {cur_buffer[471 : 448] ,cur_buffer[1023 : 984]};
             end
             5'b11101 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= cur_buffer[80:87];
-                out_row_4 <= cur_buffer[88:95];
-                out_row_5 <= cur_buffer[96:103];
-                out_row_6 <= cur_buffer[104:111];
-                out_row_7 <= {cur_buffer[48] ,cur_buffer[113:119]};
-                out_row_8 <= {cur_buffer[56:57] ,cur_buffer[122:127]};
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= cur_buffer[703 : 640];
+                out_row_4 <= cur_buffer[767 : 704];
+                out_row_5 <= cur_buffer[831 : 768];
+                out_row_6 <= cur_buffer[895 : 832];
+                out_row_7 <= {cur_buffer[391 : 384] ,cur_buffer[959 : 904]};
+                out_row_8 <= {cur_buffer[463 : 448] ,cur_buffer[1023 : 976]};
             end
             5'b11110 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= cur_buffer[80:87];
-                out_row_4 <= cur_buffer[88:95];
-                out_row_5 <= cur_buffer[96:103];
-                out_row_6 <= cur_buffer[104:111];
-                out_row_7 <= cur_buffer[112:119];
-                out_row_8 <= {cur_buffer[56] ,cur_buffer[121:127]};
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= cur_buffer[703 : 640];
+                out_row_4 <= cur_buffer[767 : 704];
+                out_row_5 <= cur_buffer[831 : 768];
+                out_row_6 <= cur_buffer[895 : 832];
+                out_row_7 <= cur_buffer[959 : 896];
+                out_row_8 <= {cur_buffer[455 : 448] ,cur_buffer[1023 : 968]};
             end
             5'b11111 : begin
-                out_row_1 <= cur_buffer[64:71];
-                out_row_2 <= cur_buffer[72:79];
-                out_row_3 <= cur_buffer[80:87];
-                out_row_4 <= cur_buffer[88:95];
-                out_row_5 <= cur_buffer[96:103];
-                out_row_6 <= cur_buffer[104:111];
-                out_row_7 <= cur_buffer[112:119];
-                out_row_8 <= cur_buffer[120:127];
+                out_row_1 <= cur_buffer[575 : 512];
+                out_row_2 <= cur_buffer[639 : 576];
+                out_row_3 <= cur_buffer[703 : 640];
+                out_row_4 <= cur_buffer[767 : 704];
+                out_row_5 <= cur_buffer[831 : 768];
+                out_row_6 <= cur_buffer[895 : 832];
+                out_row_7 <= cur_buffer[959 : 896];
+                out_row_8 <= cur_buffer[1023 : 960];
             end
             default :
                 {out_row_1, out_row_2, out_row_3, out_row_4,
