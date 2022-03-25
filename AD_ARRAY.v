@@ -23,7 +23,7 @@ module AD_ARRAY #(
 
     wire [(LOG_EDGE_LEN+BIT_DEPTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_addend_internal;
 
-    assign psad_in_internal[(EDGE_LEN+BIT_DEPTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] = 0;
+    assign psad_in_internal[(LOG_EDGE_LEN+BIT_DEPTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] = 0;
     // assign AD_in_internal=psad_out_internal[(EDGE_LEN+BIT_DEPTH)*EDGE_LEN*EDGE_LEN*PIXELS_IN_BATCH-1:(EDGE_LEN+BIT_DEPTH)*(EDGE_LEN-1)*EDGE_LEN*PIXELS_IN_BATCH];
 
     genvar i, j;
@@ -85,7 +85,7 @@ module AD_ARRAY #(
     wire [(2*LOG_EDGE_LEN+BIT_DEPTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_a_in_internal;
     wire [(2*LOG_EDGE_LEN+BIT_DEPTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_a_out_internal;
 
-    assign psad_a_in_internal[(2*LOG_EDGE_LEN+BIT_DEPTH)*PIXELS_IN_BATCH-1:0] = 0;
+    assign psad_a_in_internal[EDGE_LEN*(2*LOG_EDGE_LEN+BIT_DEPTH)*PIXELS_IN_BATCH-1:(EDGE_LEN-1)*(2*LOG_EDGE_LEN+BIT_DEPTH)*PIXELS_IN_BATCH] = 0;
 
     // localparam ADDEND_BIT_DEPTH = LOG_EDGE_LEN + BIT_DEPTH;
     // localparam PSAD_BIT_DEPTH = 2 * LOG_EDGE_LEN + BIT_DEPTH;
