@@ -41,7 +41,7 @@ module CurBuffer (
             addr <= 0;
         end
         else if (read_en) begin
-            addr <= addr + 4;
+            addr <= addr + 32;
         end
     end
 
