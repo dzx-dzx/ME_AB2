@@ -1,4 +1,6 @@
 `include "sadslspkb1p24x64m4b1w0cp0d0t0_fast_func.v"
+
+`timescale 1 ns / 1 ps
 // Cold boot requires 69 cycles
 
 module RefSRAM (
