@@ -69,6 +69,8 @@ module RefSRAM (
         else if (sram_ready == 0 && sram_write == 4'b1000) begin
             sram_ready <= 1;
         end
+        else
+            sram_ready <= sram_ready;
     end
 
     sadslspkb1p24x64m4b1w0cp0d0t0 U_SRAM_1 (
