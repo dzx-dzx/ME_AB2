@@ -1,6 +1,10 @@
 `include "CurBuffer.v"
 `include "RefSRAM.v"
 
+`include "FIFO.v"
+
+`include "AD_ARRAY.v"
+
 `timescale 1 ns / 1 ps
 
 module ME (
@@ -37,7 +41,7 @@ module ME (
             cur_read_cnt <= cur_read_cnt - 1;
         end
         else if (cur_read_start || cur_cold_boot_cnt > 0) begin
-            cur_read_cnt <= 8;
+            cur_read_cnt <= 16;
         end
     end
 
@@ -60,6 +64,50 @@ module ME (
         .cur_out   (cur_out        )
     );
 
+    wire [1023:0] reference_input_column;
 
+    FIFO fifo (
+        .clk_i    (clk                             ),
+        .rst_n_i  (rst                             ),
+        .data_in  (ref_out                         ),
+        .data_out0(reference_input_column[127:0]   ),
+        .data_out1(reference_input_column[255:128] ),
+        .data_out2(reference_input_column[383:256] ),
+        .data_out3(reference_input_column[511:384] ),
+        .data_out4(reference_input_column[639:512] ),
+        .data_out5(reference_input_column[767:640] ),
+        .data_out6(reference_input_column[895:768] ),
+        .data_out7(reference_input_column[1023:896])
+    );
+
+    parameter PIXELS_IN_BATCH = 16;
+    parameter EDGE_LEN        = 8 ;
+    parameter BIT_DEPTH       = 8 ;
+
+    wire [EDGE_LEN*EDGE_LEN*BIT_DEPTH-1:0] current_input_complete;
+
+    genvar i,j;
+    generate
+        for(i=0;i<EDGE_LEN;i=i+1)
+            begin
+                for(j=0;j<EDGE_LEN;j=j+1)
+                    begin
+                        assign current_input_complete[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH] = cur_out[(j*EDGE_LEN+i+1)*BIT_DEPTH-1:(j*EDGE_LEN+i)*BIT_DEPTH];
+                    end
+            end
+    endgenerate
+
+    AD_ARRAY #(
+        .PIXELS_IN_BATCH(16),
+        .EDGE_LEN       (8 ),
+        .LOG_EDGE_LEN   (3 ),
+        .BIT_DEPTH      (8 )
+    ) ad_array (
+        .clk                   (clk),
+        .rst                   (rst),
+        .reference_input_column(reference_input_column),
+        .current_input_complete(current_input_complete),
+        .SAD                   (   )
+    );
 
 endmodule
