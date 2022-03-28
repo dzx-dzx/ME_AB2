@@ -19,6 +19,7 @@ module ME (
 
     // RefSRAM related
     wire         ref_next_line; // When switching to the next line, set high.
+    reg  [ 13:0] ref_line_cnt ; //Every row (4096) costs 11086 (482 blocks * 23 cycles/block) cycles, which needs 14 bits to store and count.
     wire [183:0] ref_out      ;
     wire         sram_ready   ; // When the SRAM is ready, set high for one cycle.
 
@@ -30,7 +31,22 @@ module ME (
     reg  [  4:0] cur_read_cnt     ;
     reg  [  2:0] cur_cold_boot_cnt; // Counter for cold boot. Cur read 2 blocks during cold boot.
 
+    assign ref_next_line   = (ref_line_cnt > 0);
     assign cur_read_enable = (cur_read_cnt > 0);
+
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            ref_line_cnt <= 0;
+        end
+        else begin
+            if (ref_line_cnt > 0) begin
+                ref_line_cnt <= ref_line_cnt - 1;
+            end
+            else begin
+                ref_line_cnt <= 11086;
+            end
+        end
+    end
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
