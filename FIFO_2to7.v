@@ -1,7 +1,7 @@
 module FIFO_2to7 #(
     parameter OUTPUT_WIDTH    = 128,
     parameter STAGE_OUT_WIDTH = 56
-)(
+) (
     input                             clk_i    ,
     input                             rst_n_i  ,
     input  wire [   OUTPUT_WIDTH-1:0] data_in0 ,
@@ -9,7 +9,7 @@ module FIFO_2to7 #(
     output wire [   OUTPUT_WIDTH-1:0] data_out0,
     output reg  [STAGE_OUT_WIDTH-9:0] data_out1
 );
-   
+
     always@(posedge clk_i or negedge rst_n_i)
         begin
             if(!rst_n_i)
