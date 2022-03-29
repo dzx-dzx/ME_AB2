@@ -48,7 +48,7 @@ module RefSRAM (
     always @(posedge clk or posedge rst) begin
         if (rst || next_line) begin
             addr       <= 0;
-            sram_write <= 0;
+            sram_write <= 4'b0001;
         end
         else begin
             if (addr == 5'd22) begin
