@@ -7,4 +7,4 @@ def dec2hex(array: np.ndarray, target_file):
     print(f"data shape: {data.shape}")
     with open(target_file, "w") as f:
         for value in data:
-            f.write(str(hex(value)) + "\n")
+            f.write(str(hex(value))[2:] + "\n")
