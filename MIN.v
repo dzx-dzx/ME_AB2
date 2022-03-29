@@ -4,7 +4,8 @@ module MIN #(
     ) (
         input [BIT_WIDTH-1:0] element0,
         input [BIT_WIDTH-1:0] element1,
-        input [PREVIOUS_INDEX_WIDTH-1:0] previous_index,
+        input [PREVIOUS_INDEX_WIDTH-1:0] previous_index0,
+        input [PREVIOUS_INDEX_WIDTH-1:0] previous_index1,
         output reg [PREVIOUS_INDEX_WIDTH:0] index,
         output reg [BIT_WIDTH-1:0] element
     );
@@ -17,9 +18,9 @@ module MIN #(
         always @(*)
         begin
             if(PREVIOUS_INDEX_WIDTH==0)
-                index=element0<element1;
+                index=element0>element1;
             else
-                index={element0<element1, previous_index};
+                index={element0>element1, element0<element1?previous_index0:previous_index1};
         end
     endgenerate
 endmodule
