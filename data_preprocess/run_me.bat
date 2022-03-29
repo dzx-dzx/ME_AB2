@@ -4,3 +4,4 @@
 @echo == Finish ==
 @echo Results are written to './data/*_processed.txt'
 pause
+exit
