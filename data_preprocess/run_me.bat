@@ -3,3 +3,4 @@
 @python ref_data_process.py
 @echo == Finish ==
 @echo Results are written to './data/*_processed.txt'
+pause
