@@ -31,8 +31,11 @@ module ME (
     reg  [  4:0] cur_read_cnt     ;
     reg  [  2:0] cur_cold_boot_cnt; // Counter for cold boot. Cur read 2 blocks during cold boot.
 
-    assign ref_next_line   = (ref_line_cnt > 0);
+    assign ref_next_line   = (ref_line_cnt == 0);
     assign cur_read_enable = (cur_read_cnt > 0);
+
+    assign need_cur = cur_read_enable;
+    assign need_ref = 1'b1;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
