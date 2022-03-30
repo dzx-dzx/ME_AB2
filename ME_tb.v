@@ -15,7 +15,7 @@ module ME_tb ();
     initial begin
         rst = 1'b1;
         #10 rst = 1'b0;
-        #100000 $finish;
+        #10000 $finish;
     end
 
     initial begin
