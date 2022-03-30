@@ -127,7 +127,7 @@ module ME (
             begin
                 for(j=0;j<EDGE_LEN;j=j+1)
                     begin
-                        assign current_input_complete[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH] = cur_out[(j*EDGE_LEN+i+1)*BIT_DEPTH-1:(j*EDGE_LEN+i)*BIT_DEPTH];
+                        assign current_input_complete[((EDGE_LEN-j-1)*EDGE_LEN+i+1)*BIT_DEPTH-1:((EDGE_LEN-j-1)*EDGE_LEN+i)*BIT_DEPTH] = cur_out[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH];
                     end
             end
     endgenerate
