@@ -3,15 +3,15 @@ from dec2hex import dec2hex
 
 print("===== Processing Cur Frame =====")
 
-data = np.load("./data/cur_img.npy")
-print(data.shape)
-data = data.reshape(3840, 2160)
-size = [8, 8]
+data = np.load("./data/cur_img.npy").reshape(3840, 2160).T
+
+size = 8
 blocks = []
-for y in range(int(2160 / size[1])):
-    for x in range(int(3840 / size[0])):
-        block = data[size[0] * x : size[0] * (x + 1), size[1] * y : size[1] * (y + 1)]
+for row in range(2160 // size):
+    for col in range(3840 // size):
+        block = data[size * row : size * (row + 1), size * col : size * (col + 1)].T
         blocks.append(block)
+
 blocks = np.array(blocks)
 print(blocks.shape)
 blocks = blocks.flatten()

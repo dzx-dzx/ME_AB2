@@ -3,24 +3,26 @@ from dec2hex import dec2hex
 
 print("===== Processing Ref Frame =====")
 
-data = np.load("./data/ref_img.npy")
-print(data.shape)
-data = data.reshape(3840, 2160)
+data = np.load("./data/ref_img.npy").reshape(3840, 2160).T
+
 padded_data = np.pad(data, (7, 9))
 print(padded_data.shape)
+rows = padded_data.shape[0]
+cols = padded_data.shape[1]
+
 blocks = []
-y_anchor = 0
 
-while y_anchor <= padded_data.shape[1] - 23:
-    x = 0
+row = 0
+while row <= rows - 23:
     row_blocks = []
-    while x <= padded_data.shape[0] - 8:
-        row_blocks.append(np.array(padded_data[x : x + 8, y_anchor : y_anchor + 23]).T)
-        x += 8
-    blocks.append(row_blocks)
-    y_anchor += 8
+    for col in range(cols // 8):
+        block = padded_data[row : row + 23, col * 8 : col * 8 + 8]
+        row_blocks.append(block)
 
+    blocks.append(row_blocks)
+    row += 8
 blocks = np.array(blocks)
+
 print(blocks.shape)
 ref_blocks = blocks.flatten()
 
