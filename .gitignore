@@ -1,5 +1,5 @@
 *.out
-*_processed.txt
+*.txt
 *.bak
 
 # Created by https://www.toptal.com/developers/gitignore/api/python

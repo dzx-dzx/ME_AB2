@@ -2,9 +2,9 @@ module CurBuffer (
     input               clk       ,
     input               rst       ,
     input               next_block, // To send the next_block
-    input               read_en   ,
     input  wire [ 31:0] cur_in    , // 4 pixels
-    output wire [511:0] cur_out     // 8*8 pixels
+    output wire [511:0] cur_out   , // 8*8 pixels
+    output wire         need_cur
 );
 
     // 2 buffer. each stores 64 pixels
@@ -12,6 +12,10 @@ module CurBuffer (
     reg [511:0] buffer_1;
     // reg [7:0] buffer_0[0:63];
     // reg [7:0] buffer_1[0:63];
+
+    reg read_en;
+
+    assign need_cur = read_en;
 
     reg [8:0] addr; // 0 ~ 511
 
@@ -30,6 +34,7 @@ module CurBuffer (
 
     assign cur_out = {out_row_8, out_row_7, out_row_6, out_row_5,
         out_row_4, out_row_3, out_row_2, out_row_1};
+
 
     genvar i;
 
@@ -52,10 +57,18 @@ module CurBuffer (
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            addr <= 0;
+            addr    <= 0;
+            read_en <= 0;
+        end
+        else if (next_block) begin
+            read_en <= 1;
+            addr    <= 0;
         end
         else if (read_en) begin
-            addr <= addr + 32;
+            if (addr == 480)
+                read_en <= 0;
+            else
+                addr <= addr + 32;
         end
     end
 
@@ -71,8 +84,10 @@ module CurBuffer (
                 at_inter <= 1;
             end
             else if (at_inter) begin
-                if (inter_state == 6)
-                    at_inter <= 0;
+                if (inter_state == 6) begin
+                    at_inter    <= 0;
+                    inter_state <= 0;
+                end
                 else
                     inter_state <= inter_state + 1;
             end
