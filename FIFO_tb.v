@@ -41,7 +41,7 @@ end
 
 always
     #5  clk_i = ! clk_i ;
-always
+initial
     begin
         rst_n_i = 0;
         #6 rst_n_i=1;
