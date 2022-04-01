@@ -34,7 +34,7 @@ wire [119:0] data_reg6;
 
 FIFO_0 unit_0 (
     .clk_i    (clk_i    ),
-    .rst_i  (rst_i    ),
+    .rst_i    (rst_i    ),
     .data_in  (data_in  ),
     .data_out0(data_out0),
     .data_out1(trans_0  ),
@@ -46,7 +46,7 @@ FIFO_1to6 #(
     .STAGE_OUT_WIDTH(56 )
 ) unit_1 (
     .clk_i    (clk_i    ),
-    .rst_i  (rst_i    ),
+    .rst_i    (rst_i    ),
     .data_in0 (data_reg0),
     .data_in1 (trans_0  ),
     .data_out0(data_out1),
@@ -59,7 +59,7 @@ FIFO_1to6 #(
     .STAGE_OUT_WIDTH(48 )
 ) unit_2 (
     .clk_i    (clk_i    ),
-    .rst_i  (rst_i    ),
+    .rst_i    (rst_i    ),
     .data_in0 (data_reg1),
     .data_in1 (trans_1  ),
     .data_out0(data_out2),
@@ -72,7 +72,7 @@ FIFO_1to6 #(
     .STAGE_OUT_WIDTH(40 )
 ) unit_3 (
     .clk_i    (clk_i    ),
-    .rst_i  (rst_i    ),
+    .rst_i    (rst_i    ),
     .data_in0 (data_reg2),
     .data_in1 (trans_2  ),
     .data_out0(data_out3),
@@ -85,7 +85,7 @@ FIFO_1to6 #(
     .STAGE_OUT_WIDTH(32 )
 ) unit_4 (
     .clk_i    (clk_i    ),
-    .rst_i  (rst_i    ),
+    .rst_i    (rst_i    ),
     .data_in0 (data_reg3),
     .data_in1 (trans_3  ),
     .data_out0(data_out4),
@@ -98,7 +98,7 @@ FIFO_1to6 #(
     .STAGE_OUT_WIDTH(24 )
 ) unit_5 (
     .clk_i    (clk_i    ),
-    .rst_i  (rst_i    ),
+    .rst_i    (rst_i    ),
     .data_in0 (data_reg4),
     .data_in1 (trans_4  ),
     .data_out0(data_out5),
@@ -111,7 +111,7 @@ FIFO_1to6 #(
     .STAGE_OUT_WIDTH(16 )
 ) unit_6 (
     .clk_i    (clk_i    ),
-    .rst_i  (rst_i    ),
+    .rst_i    (rst_i    ),
     .data_in0 (data_reg5),
     .data_in1 (trans_5  ),
     .data_out0(data_out6),
@@ -121,7 +121,7 @@ FIFO_1to6 #(
 
 FIFO_7 unit_7 (
     .clk_i   (clk_i    ),
-    .rst_i (rst_i    ),
+    .rst_i   (rst_i    ),
     .data_in0(data_reg6),
     .data_in1(trans_6  ),
     .data_out(data_out7)
