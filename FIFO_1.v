@@ -14,7 +14,7 @@ module FIFO_1 (
                 end
             else
                 begin
-                    data_out1 <= data_in[183:136];
+                    data_out1 <= data_in[183:128];
                 end
         end
 
