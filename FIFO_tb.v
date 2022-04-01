@@ -43,17 +43,9 @@ end
 
 always
     #5  clk_i = ! clk_i ;
-<<<<<<< HEAD
-//always
-    //begin
-        //rst_n_i = 0;
-        //#6 rst_n_i=1;
-    //end
-=======
 initial
     begin
         rst_n_i = 0;
         #6 rst_n_i=1;
     end
->>>>>>> 526db502f56cc50d6a1e60b7691d2d91fa188ae8
 endmodule
