@@ -37,7 +37,9 @@ module AD_ARRAY #(
                 AD #(
                        .PIXELS_IN_BATCH          (PIXELS_IN_BATCH),
                        .BIT_DEPTH                (BIT_DEPTH),
-                       .INPUT_PSAD_BITS_PER_PIXEL(PSAD_BIT_WIDTH)
+                       .INPUT_PSAD_BITS_PER_PIXEL(PSAD_BIT_WIDTH),
+                       .DEBUG_I(i),
+                       .DEBUG_J(j)
                    ) ad (
                        .reference_input (reference_in_internal[(i*EDGE_LEN+j+1)*PIXELS_IN_BATCH*BIT_DEPTH-1:(i*EDGE_LEN+j)*PIXELS_IN_BATCH*BIT_DEPTH] ),
                        .current         (current_input_complete[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH]                                ),

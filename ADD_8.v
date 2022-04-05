@@ -1,17 +1,29 @@
 `include "ADD.v"
 module ADD_8 #(
-        parameter ELEMENT_BIT_DEPTH = 14
-    ) (
-        input [ELEMENT_BIT_DEPTH*8-1:0] addend_array,
-        output reg [ELEMENT_BIT_DEPTH-1:0] add
-    );
-    genvar i;
-    wire [ELEMENT_BIT_DEPTH-1:0] add_intermediate_4;
+    parameter ELEMENT_BIT_DEPTH = 14
+) (
+    input [ELEMENT_BIT_DEPTH*8-1:0] addend_array,
+    output reg [ELEMENT_BIT_DEPTH-1:0] add
+);
+genvar i;
 
-    generate
+wire [ELEMENT_BIT_DEPTH-1:0] addend_debug [0:7];
+generate
+    for(i=0;i<8;i=i+1)
+        begin
+            assign addend_debug[i] = addend_array[(i+1)*ELEMENT_BIT_DEPTH-1:i*ELEMENT_BIT_DEPTH];
+            initial begin
+                $dumpfile("FIFO_AD_ARRAY.vcd");
+                $dumpvars(0,addend_debug[i]);
 
-        wire [ELEMENT_BIT_DEPTH*4-1:0] add_intermediate_1;
-        for(i=0;i<4;i=i+1)
+            end
+        end
+endgenerate
+
+generate
+
+    wire [ELEMENT_BIT_DEPTH*4-1:0] add_intermediate_1;
+    for(i=0;i<4;i=i+1)
         begin
             ADD #(
                 .BIT_WIDTH(ELEMENT_BIT_DEPTH)
@@ -22,8 +34,8 @@ module ADD_8 #(
             );
         end
 
-        wire [ELEMENT_BIT_DEPTH*2-1:0] add_intermediate_2;
-        for(i=0;i<2;i=i+1)
+    wire [ELEMENT_BIT_DEPTH*2-1:0] add_intermediate_2;
+    for(i=0;i<2;i=i+1)
         begin
             ADD #(
                 .BIT_WIDTH(ELEMENT_BIT_DEPTH)
@@ -34,8 +46,8 @@ module ADD_8 #(
             );
         end
 
-        wire [ELEMENT_BIT_DEPTH-1:0] add_intermediate_3;
-        for(i=0;i<1;i=i+1)
+    wire [ELEMENT_BIT_DEPTH-1:0] add_intermediate_3;
+    for(i=0;i<1;i=i+1)
         begin
             ADD #(
                 .BIT_WIDTH(ELEMENT_BIT_DEPTH)
@@ -45,9 +57,9 @@ module ADD_8 #(
                 .element(add_intermediate_3[(i+1)*ELEMENT_BIT_DEPTH-1:i*ELEMENT_BIT_DEPTH])
             );
         end
-    endgenerate
-    always @(*)
+endgenerate
+always @(*)
     begin
-      add=add_intermediate_3;
+        add = add_intermediate_3;
     end
 endmodule
