@@ -14,13 +14,8 @@ module MIN #(
 
         element=element0<element1?element0:element1;
     end
-    generate
         always @(*)
         begin
-            if(PREVIOUS_INDEX_WIDTH==0)
-                index=element0>element1;
-            else
                 index={element0>element1, element0<element1?previous_index0:previous_index1};
         end
-    endgenerate
 endmodule

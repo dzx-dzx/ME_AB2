@@ -1,4 +1,5 @@
 `include "MIN.v"
+`include "MIN_LEAF.v"
 module MIN_16 #(
         parameter ELEMENT_BIT_DEPTH = 14
     ) (
@@ -13,14 +14,11 @@ module MIN_16 #(
         wire [8*1-1:0] min_intermediate_index_1;
         for(i=0;i<8;i=i+1)
         begin
-            MIN #(
-                .BIT_WIDTH(ELEMENT_BIT_DEPTH),
-                .PREVIOUS_INDEX_WIDTH(0)
-            ) min(
+            MIN_LEAF #(
+                .BIT_WIDTH(ELEMENT_BIT_DEPTH)
+            ) min_leaf(
                 .element0(min_array[(2*i+1)*ELEMENT_BIT_DEPTH-1:(2*i)*ELEMENT_BIT_DEPTH]),
                 .element1(min_array[(2*i+2)*ELEMENT_BIT_DEPTH-1:(2*i+1)*ELEMENT_BIT_DEPTH]),
-                .previous_index0(1'b0),
-                .previous_index1(1'b0),
                 .index(min_intermediate_index_1[i:i]),
                 .element(min_intermediate_1[(i+1)*ELEMENT_BIT_DEPTH-1:i*ELEMENT_BIT_DEPTH])
             );
