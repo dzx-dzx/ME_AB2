@@ -19,23 +19,18 @@ module CurBuffer_tb ();
         $readmemh("./cur_test.txt", cur_mem);
     end
 
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if (rst) begin
             mem_addr <= 0;
         end
         else begin
             if (need_cur) begin
-                mem_addr <= mem_addr + 4;
+                cur_in[7:0]   <= cur_mem[mem_addr];
+                cur_in[15:8]  <= cur_mem[mem_addr+1];
+                cur_in[23:16] <= cur_mem[mem_addr+2];
+                cur_in[31:24] <= cur_mem[mem_addr+3];
+                mem_addr      <= mem_addr + 4;
             end
-        end
-    end
-
-    always @(*) begin
-        if (need_cur) begin
-            cur_in[7:0]   <= cur_mem[mem_addr];
-            cur_in[15:8]  <= cur_mem[mem_addr+1];
-            cur_in[23:16] <= cur_mem[mem_addr+2];
-            cur_in[31:24] <= cur_mem[mem_addr+3];
         end
     end
 
@@ -47,7 +42,7 @@ module CurBuffer_tb ();
 
     initial begin
         next_block = 0;
-        # 300;
+        # 305;
         forever begin
             # 200 next_block = ~next_block;
             # 10 next_block = ~next_block;

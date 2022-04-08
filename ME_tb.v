@@ -1,6 +1,6 @@
 `include "ME.v"
 
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 
 module ME_tb ();
     reg clk;
@@ -26,12 +26,17 @@ module ME_tb ();
     reg [7:0] cur_mem[ 0:8300000]; // Need 3840x2160 = 8294400
     reg [7:0] ref_mem[0:23945800]; // Need 23945760
 
-    reg [23:0] cur_mem_addr;
-    reg [25:0] ref_mem_addr;
+    reg [31:0] cur_mem_addr;
+    reg [31:0] ref_mem_addr;
+
+    // initial begin
+    //     $readmemh("./data_preprocess/data/cur_processed.txt", cur_mem);
+    //     $readmemh("./data_preprocess/data/ref_processed.txt", ref_mem);
+    // end
 
     initial begin
-        $readmemh("./data_preprocess/data/cur_processed.txt", cur_mem);
-        $readmemh("./data_preprocess/data/ref_processed.txt", ref_mem);
+        $readmemh("cur_test.txt", cur_mem);
+        $readmemh("ref_test.txt", ref_mem);
     end
 
     reg [31:0] cur_in;
@@ -40,7 +45,7 @@ module ME_tb ();
     wire need_cur;
     wire need_ref;
 
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if (rst) begin
             cur_mem_addr <= 0;
             ref_mem_addr <= 0;
@@ -49,12 +54,24 @@ module ME_tb ();
         end
         else begin
             if (need_cur) begin
-                cur_in       <= cur_mem[cur_mem_addr];
-                cur_mem_addr <= cur_mem_addr + 1;
+                cur_in[7:0]   <= cur_mem[cur_mem_addr];
+                cur_in[15:8]  <= cur_mem[cur_mem_addr + 1];
+                cur_in[23:16] <= cur_mem[cur_mem_addr + 2];
+                cur_in[31:24] <= cur_mem[cur_mem_addr + 3];
+
+                cur_mem_addr <= cur_mem_addr + 4;
             end
             else if (need_ref) begin
-                ref_in       <= ref_mem[ref_mem_addr];
-                ref_mem_addr <= ref_mem_addr + 1;
+                ref_in[7:0]   <= cur_mem[cur_mem_addr + 0];
+                ref_in[15:8]  <= cur_mem[cur_mem_addr + 1];
+                ref_in[23:16] <= cur_mem[cur_mem_addr + 2];
+                ref_in[31:24] <= cur_mem[cur_mem_addr + 3];
+                ref_in[39:32] <= cur_mem[cur_mem_addr + 4];
+                ref_in[47:40] <= cur_mem[cur_mem_addr + 5];
+                ref_in[55:48] <= cur_mem[cur_mem_addr + 6];
+                ref_in[63:56] <= cur_mem[cur_mem_addr + 7];
+
+                ref_mem_addr <= ref_mem_addr + 8;
             end
             else ;
         end

@@ -1,12 +1,3 @@
-`include "CurBuffer.v"
-`include "RefSRAM.v"
-
-`include "FIFO.v"
-
-`include "AD_ARRAY.v"
-`include "ADD_8.v"
-`include "MIN_16.v"
-
 `timescale 1 ns / 1 ns
 
 module ME (
@@ -24,59 +15,17 @@ module ME (
     reg  [ 13:0] ref_line_cnt; //Every row (4096) costs 11086 (482 blocks * 23 cycles/block) cycles, which needs 14 bits to store and count.
     wire [183:0] ref_out     ;
     wire         sram_ready  ; // When the SRAM is ready, set high for one cycle.
+    wire         next_block  ;
+
+    assign need_ref = ref_read_en;
+    // -------------------------
 
     // CurBuffer related
-    wire         cur_read_start   ; // When cur start to read, set high for one cycle.
-    wire         cur_read_enable  ; // When CurBuffer is set to read, set high.
-    wire         cur_next_block   ; // When AD needs data from the next cur block, set high for 1 cycle.
-    wire [511:0] cur_out          ; // Data outputt from CurBuffer to AD;
-    reg  [  4:0] cur_read_cnt     ;
-    reg  [  2:0] cur_cold_boot_cnt; // Counter for cold boot. Cur read 2 blocks during cold boot.
+    wire         cur_next_block; // When AD needs data from the next cur block, set high for 1 cycle.
+    wire [511:0] cur_out       ; // Data output from CurBuffer to AD;
 
-    assign cur_read_enable = (cur_read_cnt > 0);
-
-    assign cur_read_start = cur_next_block || (cur_read_cnt == 0 && cur_cold_boot_cnt > 0);
-
-    assign need_cur = cur_read_enable;
-    assign need_ref = 1'b1;
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            ref_line_cnt <= 0;
-        end
-        else begin
-            if (ref_line_cnt > 0) begin
-                ref_line_cnt <= ref_line_cnt - 1;
-            end
-            else begin
-                ref_line_cnt <= 11086;
-            end
-        end
-    end
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            cur_read_cnt <= 0;
-        end
-        else begin
-            if (cur_read_cnt > 0) begin
-                cur_read_cnt <= cur_read_cnt - 1;
-            end
-            else if (cur_read_start) begin
-                cur_read_cnt <= 16;
-            end
-        end
-    end
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            cur_cold_boot_cnt <= 2;
-        end
-        else if (cur_cold_boot_cnt > 0 && cur_read_cnt == 0) begin
-            cur_cold_boot_cnt <= cur_cold_boot_cnt - 1;
-        end
-    end
-
+    assign cur_next_block = next_block;
+    // -------------------------
 
     RefSRAM U_RefSRAM (
         .clk       (clk        ),
@@ -84,7 +33,8 @@ module ME (
         .ref_in    (ref_in     ),
         .read_en   (ref_read_en),
         .ref_out   (ref_out    ),
-        .sram_ready(sram_ready )
+        .sram_ready(sram_ready ),
+        .next_block(next_block )
     );
 
     CurBuffer U_CurBuffer (
