@@ -20,10 +20,10 @@ module ME (
 
 
     // RefSRAM related
-    wire         ref_next_line; // When switching to the next line, set high.
-    reg  [ 13:0] ref_line_cnt ; //Every row (4096) costs 11086 (482 blocks * 23 cycles/block) cycles, which needs 14 bits to store and count.
-    wire [183:0] ref_out      ;
-    wire         sram_ready   ; // When the SRAM is ready, set high for one cycle.
+    wire         ref_read_en ;
+    reg  [ 13:0] ref_line_cnt; //Every row (4096) costs 11086 (482 blocks * 23 cycles/block) cycles, which needs 14 bits to store and count.
+    wire [183:0] ref_out     ;
+    wire         sram_ready  ; // When the SRAM is ready, set high for one cycle.
 
     // CurBuffer related
     wire         cur_read_start   ; // When cur start to read, set high for one cycle.
@@ -33,7 +33,6 @@ module ME (
     reg  [  4:0] cur_read_cnt     ;
     reg  [  2:0] cur_cold_boot_cnt; // Counter for cold boot. Cur read 2 blocks during cold boot.
 
-    assign ref_next_line   = (ref_line_cnt == 0);
     assign cur_read_enable = (cur_read_cnt > 0);
 
     assign cur_read_start = cur_next_block || (cur_read_cnt == 0 && cur_cold_boot_cnt > 0);
@@ -80,28 +79,28 @@ module ME (
 
 
     RefSRAM U_RefSRAM (
-        .clk       (clk          ),
-        .rst       (rst          ),
-        .next_line (ref_next_line),
-        .ref_in    (ref_in       ),
-        .ref_out   (ref_out      ),
-        .sram_ready(sram_ready   )
+        .clk       (clk        ),
+        .rst       (rst        ),
+        .ref_in    (ref_in     ),
+        .read_en   (ref_read_en),
+        .ref_out   (ref_out    ),
+        .sram_ready(sram_ready )
     );
 
     CurBuffer U_CurBuffer (
-        .clk       (clk            ),
-        .rst       (rst            ),
-        .next_block(cur_next_block ),
-        .read_en   (cur_read_enable),
-        .cur_in    (cur_in         ),
-        .cur_out   (cur_out        )
+        .clk       (clk           ),
+        .rst       (rst           ),
+        .next_block(cur_next_block),
+        .cur_in    (cur_in        ),
+        .cur_out   (cur_out       ),
+        .need_cur  (need_cur      )
     );
 
     wire [1023:0] reference_input_column;
 
     FIFO fifo (
         .clk_i    (clk                             ),
-        .rst_n_i  (rst                             ),
+        .rst_i    (rst                             ),
         .data_in  (ref_out                         ),
         .data_out0(reference_input_column[127:0]   ),
         .data_out1(reference_input_column[255:128] ),
