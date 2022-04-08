@@ -46,8 +46,8 @@ module CurBuffer_tb ();
     end
 
     initial begin
-        # 5;
         next_block = 0;
+        # 300;
         forever begin
             # 200 next_block = ~next_block;
             # 10 next_block = ~next_block;

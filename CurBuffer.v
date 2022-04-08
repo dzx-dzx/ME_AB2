@@ -21,6 +21,8 @@ module CurBuffer (
     reg       at_inter   ;
     reg [2:0] inter_state;
 
+    reg cold_boot;
+
     reg [63:0] out_row_1;
     reg [63:0] out_row_2;
     reg [63:0] out_row_3;
@@ -116,12 +118,14 @@ module CurBuffer (
 
     always @(posedge clk) begin
         if (rst) begin
-            addr    <= 0;
-            read_en <= 0;
+            addr      <= 0;
+            read_en   <= 0;
+            cold_boot <= 1;
         end
-        else if (next_block) begin
-            read_en <= 1;
-            addr    <= 0;
+        else if (next_block || cold_boot) begin
+            read_en   <= 1;
+            addr      <= 0;
+            cold_boot <= 0;
         end
         else if (read_en) begin
             if (addr == 480)
@@ -138,7 +142,7 @@ module CurBuffer (
             inter_state <= 0;
         end
         else begin
-            if (next_block) begin
+            if (next_block || cold_boot) begin
                 half     <= ~half;
                 at_inter <= 1;
             end
