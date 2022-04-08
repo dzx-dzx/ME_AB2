@@ -8,7 +8,8 @@ module RefSRAM (
     input  wire [ 63:0] ref_in    , // 8 pixels
     output wire         read_en   ,
     output reg  [183:0] ref_out   , // 23 pixels
-    output reg          sram_ready  // Set high when ref_out is valid.
+    output reg          sram_ready, // Set high when ref_out is valid.
+    output reg          next_block  // Set high when CurBuffer need to past the next block
 );
 
     reg [4:0] addr           ;
@@ -43,10 +44,7 @@ module RefSRAM (
     reg [9:0] block_cnt;
     reg       next_line;
 
-    // assign ref_out = we_1 ? {q_2, q_3, q_4[63:8]}
-    //     :we_2 ? {q_3, q_4, q_1[63:8]}
-    //     :we_3 ? {q_4, q_1, q_2[63:8]}
-    //     :{q_1, q_2, q_3[63:8]};
+
     always @(*) begin
         if (addr != 0)
             case (sram_is_written)
@@ -108,8 +106,16 @@ module RefSRAM (
         end
     end
 
-    // First time write sram_4 => Sram is ready
+    // Next block for CurBuffer
+    always @(posedge clk) begin
+        if (rst)
+            next_block <= 0;
+        else if (sram_ready && addr == 9)
+            next_block <= 1;
+        else next_block <= 0;
+    end
 
+    // First time write sram_4 => Sram is ready
     always @(posedge clk) begin
         if (rst) begin
             sram_ready <= 0;
@@ -123,6 +129,7 @@ module RefSRAM (
         else
             sram_ready <= sram_ready;
     end
+
 
     sadslspkb1p24x64m4b1w0cp0d0t0 U_SRAM_1 (
         .Q    (q_1   ),

@@ -10,6 +10,8 @@ module RefSRAM_tb ();
     reg  [ 63:0] ref_in        ;
     wire [183:0] ref_out       ;
     wire         sram_ready    ;
+    wire         next_block    ;
+    wire         read_en       ;
 
     reg [ 7:0] mem     [0:5000];
     reg [11:0] mem_addr        ;
@@ -38,11 +40,13 @@ module RefSRAM_tb ();
     endgenerate
 
     RefSRAM RefSRAM_dut (
-        .clk       (clk       ),
-        .rst       (rst       ),
-        .ref_in    (ref_in    ),
-        .ref_out   (ref_out   ),
-        .sram_ready(sram_ready)
+        .clk        (clk       ),
+        .rst        (rst       ),
+        .ref_in     (ref_in    ),
+        .read_en    (read_en   ),
+        .ref_out    (ref_out   ),
+        .sram_ready (sram_ready),
+        .next_block (next_block)
     );
 
     initial begin
