@@ -12,11 +12,6 @@ generate
     for(i=0;i<8;i=i+1)
         begin
             assign addend_debug[i] = addend_array[(i+1)*ELEMENT_BIT_DEPTH-1:i*ELEMENT_BIT_DEPTH];
-            initial begin
-                $dumpfile("FIFO_AD_ARRAY.vcd");
-                $dumpvars(0,addend_debug[i]);
-
-            end
         end
 endgenerate
 
