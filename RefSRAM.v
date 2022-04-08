@@ -110,7 +110,7 @@ module RefSRAM (
     always @(posedge clk) begin
         if (rst)
             next_block <= 0;
-        else if (sram_ready && addr == 9)
+        else if (sram_ready && addr == 8)
             next_block <= 1;
         else next_block <= 0;
     end
