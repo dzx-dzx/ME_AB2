@@ -1,12 +1,26 @@
 `timescale 1 ns / 1 ns
-
-module ME (
+`include "RefSRAM.v"
+`include "CurBuffer.v"
+`include "FIFO.v"
+`include "AD_ARRAY.v"
+`include "MIN_16.v"
+`include "ADD_8.v"
+module ME #(
+     parameter PIXELS_IN_BATCH = 16,
+    parameter EDGE_LEN        = 8 ,
+    parameter BIT_DEPTH       = 8 ,
+    parameter SAD_BIT_WIDTH   = 14,
+    parameter PSAD_BIT_WIDTH  = 11
+)
+(
     input              clk     ,
     input              rst     ,
     input  wire [31:0] cur_in  , // 4 pixels
     input  wire [63:0] ref_in  , // 8 pixels
     output wire        need_cur, // ask for cur_in
-    output wire        need_ref  // ask for ref_in
+    output wire        need_ref,  // ask for ref_in
+    output wire [                SAD_BIT_WIDTH-1:0] MSAD_interim      ,
+    output wire [                              3:0] MSAD_index_interim
 );
 
 
@@ -62,11 +76,7 @@ module ME (
         .data_out7(reference_input_column[1023:896])
     );
 
-    parameter PIXELS_IN_BATCH = 16;
-    parameter EDGE_LEN        = 8 ;
-    parameter BIT_DEPTH       = 8 ;
-    parameter SAD_BIT_WIDTH   = 14;
-    parameter PSAD_BIT_WIDTH  = 11;
+   
 
     wire [EDGE_LEN*EDGE_LEN*BIT_DEPTH-1:0] current_input_complete;
 
@@ -97,8 +107,7 @@ module ME (
     );
 
     wire [PIXELS_IN_BATCH*SAD_BIT_WIDTH-1:0] SAD_batch_interim ;
-    wire [                SAD_BIT_WIDTH-1:0] MSAD_interim      ;
-    wire [                              3:0] MSAD_index_interim;
+    
 
     generate
         for(i=0;i<PIXELS_IN_BATCH;i=i+1)

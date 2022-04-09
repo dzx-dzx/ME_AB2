@@ -16,6 +16,6 @@ module MIN #(
     end
         always @(*)
         begin
-                index={element0>element1, element0<element1?previous_index0:previous_index1};
+                index={~(element0<element1), element0<element1?previous_index0:previous_index1};
         end
 endmodule

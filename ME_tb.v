@@ -29,15 +29,15 @@ module ME_tb ();
     reg [31:0] cur_mem_addr;
     reg [31:0] ref_mem_addr;
 
-    // initial begin
-    //     $readmemh("./data_preprocess/data/cur_processed.txt", cur_mem);
-    //     $readmemh("./data_preprocess/data/ref_processed.txt", ref_mem);
-    // end
-
     initial begin
-        $readmemh("cur_test.txt", cur_mem);
-        $readmemh("ref_test.txt", ref_mem);
+        $readmemh("./data_preprocess/data/cur_test.txt", cur_mem);
+        $readmemh("./data_preprocess/data/ref_test.txt", ref_mem);
     end
+
+    // initial begin
+    //     $readmemh("cur_test.txt", cur_mem);
+    //     $readmemh("ref_test.txt", ref_mem);
+    // end
 
     reg [31:0] cur_in;
     reg [63:0] ref_in;
