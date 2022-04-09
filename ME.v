@@ -1,13 +1,29 @@
-`timescale 1 ns / 1 ns
-
 module ME (
-    input              clk     ,
-    input              rst     ,
-    input  wire [31:0] cur_in  , // 4 pixels
-    input  wire [63:0] ref_in  , // 8 pixels
-    output wire        need_cur, // ask for cur_in
-    output wire        need_ref  // ask for ref_in
+    input              clk         ,
+    input              rst         ,
+    input              en_i        ,
+    input  wire [31:0] cur_in_i    , // 4 pixels
+    input  wire [63:0] ref_in_i    , // 8 pixels
+    output reg  [31:0] cur_mem_addr,
+    output reg  [31:0] ref_mem_addr,
+    output wire        need_cur    , // ask for cur_in
+    output wire        need_ref      // ask for ref_in
 );
+
+    wire        en    ;
+    wire [31:0] cur_in;
+    wire [63:0] ref_in;
+
+    ME_input_buffer U_ME_input_buffer (
+        .clk     (clk     ),
+        .rst     (rst     ),
+        .en_i    (en_i    ),
+        .cur_in_i(cur_in_i),
+        .ref_in_i(ref_in_i),
+        .en_o    (en      ),
+        .cur_in_o(cur_in  ),
+        .ref_in_o(ref_in  )
+    );
 
 
     // RefSRAM related
