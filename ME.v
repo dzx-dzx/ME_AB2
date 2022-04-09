@@ -4,10 +4,10 @@ module ME (
     input              en_i        ,
     input  wire [31:0] cur_in_i    , // 4 pixels
     input  wire [63:0] ref_in_i    , // 8 pixels
-    output reg  [31:0] cur_mem_addr,
-    output reg  [31:0] ref_mem_addr,
-    output wire        need_cur    , // ask for cur_in
-    output wire        need_ref      // ask for ref_in
+    output wire [31:0] cur_mem_addr,
+    output wire [31:0] ref_mem_addr,
+    output wire        cur_mem_en  ,
+    output wire        ref_mem_en
 );
 
     wire        en    ;
@@ -25,6 +25,8 @@ module ME (
         .ref_in_o(ref_in  )
     );
 
+    assign cur_mem_en = en;
+    assign ref_mem_en = en;
 
     // RefSRAM related
     wire         ref_read_en ;
@@ -33,33 +35,33 @@ module ME (
     wire         sram_ready  ; // When the SRAM is ready, set high for one cycle.
     wire         next_block  ;
 
-    assign need_ref = ref_read_en;
+
     // -------------------------
 
     // CurBuffer related
-    wire         cur_next_block; // When AD needs data from the next cur block, set high for 1 cycle.
-    wire [511:0] cur_out       ; // Data output from CurBuffer to AD;
+    wire [511:0] cur_out; // Data output from CurBuffer to AD;
 
-    assign cur_next_block = next_block;
     // -------------------------
 
     RefSRAM U_RefSRAM (
-        .clk       (clk        ),
-        .rst       (rst        ),
-        .ref_in    (ref_in     ),
-        .read_en   (ref_read_en),
-        .ref_out   (ref_out    ),
-        .sram_ready(sram_ready ),
-        .next_block(next_block )
+        .clk            (clk         ),
+        .rst            (rst         ),
+        .en             (en          ),
+        .ref_in         (ref_in      ),
+        .ref_out        (ref_out     ),
+        .ref_mem_addr   (ref_mem_addr),
+        .sram_ready_late(sram_ready  ),
+        .next_block     (next_block  )
     );
 
     CurBuffer U_CurBuffer (
-        .clk       (clk           ),
-        .rst       (rst           ),
-        .next_block(cur_next_block),
-        .cur_in    (cur_in        ),
-        .cur_out   (cur_out       ),
-        .need_cur  (need_cur      )
+        .clk         (clk         ),
+        .rst         (rst         ),
+        .en          (en          ),
+        .next_block  (next_block  ),
+        .cur_in      (cur_in      ),
+        .cur_out     (cur_out     ),
+        .cur_mem_addr(cur_mem_addr)
     );
 
     wire [1023:0] reference_input_column;

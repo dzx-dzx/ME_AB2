@@ -35,7 +35,7 @@ module CurBuffer_tb ();
     end
 
     initial begin
-        $dumpfile("wave.vcd");
+        $dumpfile("cur_wave.vcd");
         $dumpvars(0, CurBuffer_tb);
     end
 

@@ -2,18 +2,36 @@
 
 
 module RefSRAM (
-    input               clk         ,
-    input               rst         ,
-    input               en          ,
-    input  wire [ 63:0] ref_in      , // 8 pixels
-    output reg  [183:0] ref_out     , // 23 pixels
-    output reg  [ 31:0] ref_mem_addr,
-    output reg          sram_ready  , // Set high when ref_out is valid.
-    output reg          next_block    // Set high when CurBuffer need to past the next block
+    input               clk            ,
+    input               rst            ,
+    input               en             ,
+    input  wire [ 63:0] ref_in         , // 8 pixels
+    output reg  [183:0] ref_out        , // 23 pixels
+    output reg  [ 31:0] ref_mem_addr   ,
+    output reg          sram_ready_late, // Set high when ref_out is valid.
+    output reg          next_block       // Set high when CurBuffer need to past the next block
 );
 
     reg [4:0] addr           ;
     reg [3:0] sram_is_written; // Which sram is at WRITE state
+
+    reg [4:0] addr_late           ;
+    reg [3:0] sram_is_written_late;
+
+    reg sram_ready;
+
+    always @(posedge clk) begin
+        if (rst) begin
+            addr_late            <= 0;
+            sram_is_written_late <= 0;
+            sram_ready_late      <= 0;
+        end
+        else begin
+            addr_late            <= addr;
+            sram_is_written_late <= sram_is_written;
+            sram_ready_late      <= sram_ready;
+        end
+    end
 
     wire [63:0] q_1;
     wire [63:0] q_2;
@@ -25,10 +43,10 @@ module RefSRAM (
     wire we_3;
     wire we_4;
 
-    assign we_1 = (sram_is_written[0] == 1);
-    assign we_2 = (sram_is_written[1] == 1);
-    assign we_3 = (sram_is_written[2] == 1);
-    assign we_4 = (sram_is_written[3] == 1);
+    assign we_1 = (sram_is_written_late[0] == 1);
+    assign we_2 = (sram_is_written_late[1] == 1);
+    assign we_3 = (sram_is_written_late[2] == 1);
+    assign we_4 = (sram_is_written_late[3] == 1);
 
     wire       me  ;
     wire       test;
@@ -45,8 +63,8 @@ module RefSRAM (
 
     always @(*) begin
         if (en) begin
-            if (addr != 0)
-                case (sram_is_written)
+            if (addr_late != 0)
+                case (sram_is_written_late)
                     4'b0001 :
                         ref_out <= {q_2, q_3, q_4[63:8]};
                     4'b0010 :
@@ -59,7 +77,7 @@ module RefSRAM (
                         ref_out <= 0;
                 endcase
             else
-                case (sram_is_written)
+                case (sram_is_written_late)
                     4'b0001 :
                         ref_out <= {q_1, q_2, q_3[63:8]};
                     4'b0010 :

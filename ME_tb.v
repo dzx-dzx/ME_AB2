@@ -16,7 +16,7 @@ module ME_tb ();
         en_i = 1'b0;
         #10 rst = 1'b0;
         #20 en_i = 1'b1;
-        #10000 $finish;
+        #3000 $finish;
     end
 
     initial begin
@@ -33,7 +33,6 @@ module ME_tb ();
     wire        need_cur    ;
     wire        need_ref    ;
 
-
     ME U_ME (
         .clk         (clk         ),
         .rst         (rst         ),
@@ -42,8 +41,8 @@ module ME_tb ();
         .ref_in_i    (ref_in      ),
         .cur_mem_addr(cur_mem_addr),
         .ref_mem_addr(ref_mem_addr),
-        .need_cur    (need_cur    ),
-        .need_ref    (need_ref    )
+        .cur_mem_en  (cur_mem_en  ),
+        .ref_mem_en  (ref_mem_en  )
     );
 
     cur_mem U_cur_mem (

@@ -13,14 +13,16 @@ module CurBuffer (
     reg [511:0] buffer_1;
 
 
-    reg [3:0] buffer_addr;
+    reg [3:0] buffer_addr     ;
+    reg [3:0] buffer_addr_late;
 
     reg       half       ;
     reg       at_inter   ;
     reg [2:0] inter_state;
 
-    reg cold_boot;
-    reg read_en  ;
+    reg cold_boot   ;
+    reg read_en     ;
+    reg read_en_late;
 
     reg [63:0] out_row_1;
     reg [63:0] out_row_2;
@@ -58,6 +60,19 @@ module CurBuffer (
             else;
         end
         else ;
+    end
+
+
+    // Buffer_addr FF to meet timing
+    always @(posedge clk) begin
+        if (rst) begin
+            buffer_addr_late <= 0;
+            read_en_late     <= 0;
+        end
+        else begin
+            buffer_addr_late <= buffer_addr;
+            read_en_late     <= read_en;
+        end
     end
 
 
@@ -272,77 +287,77 @@ module CurBuffer (
             buffer_0 <= 0;
             buffer_1 <= 0;
         end
-        else if (read_en)
+        else if (read_en_late)
             case (half)
                 // buffer_0 is valid and write buffer_1
                 1'b0 : begin
-                    buffer_1[{buffer_addr,5'b00000}+0]  <= cur_in[0];
-                    buffer_1[{buffer_addr,5'b00000}+1]  <= cur_in[1];
-                    buffer_1[{buffer_addr,5'b00000}+2]  <= cur_in[2];
-                    buffer_1[{buffer_addr,5'b00000}+3]  <= cur_in[3];
-                    buffer_1[{buffer_addr,5'b00000}+4]  <= cur_in[4];
-                    buffer_1[{buffer_addr,5'b00000}+5]  <= cur_in[5];
-                    buffer_1[{buffer_addr,5'b00000}+6]  <= cur_in[6];
-                    buffer_1[{buffer_addr,5'b00000}+7]  <= cur_in[7];
-                    buffer_1[{buffer_addr,5'b00000}+8]  <= cur_in[8];
-                    buffer_1[{buffer_addr,5'b00000}+9]  <= cur_in[9];
-                    buffer_1[{buffer_addr,5'b00000}+10] <= cur_in[10];
-                    buffer_1[{buffer_addr,5'b00000}+11] <= cur_in[11];
-                    buffer_1[{buffer_addr,5'b00000}+12] <= cur_in[12];
-                    buffer_1[{buffer_addr,5'b00000}+13] <= cur_in[13];
-                    buffer_1[{buffer_addr,5'b00000}+14] <= cur_in[14];
-                    buffer_1[{buffer_addr,5'b00000}+15] <= cur_in[15];
-                    buffer_1[{buffer_addr,5'b00000}+16] <= cur_in[16];
-                    buffer_1[{buffer_addr,5'b00000}+17] <= cur_in[17];
-                    buffer_1[{buffer_addr,5'b00000}+18] <= cur_in[18];
-                    buffer_1[{buffer_addr,5'b00000}+19] <= cur_in[19];
-                    buffer_1[{buffer_addr,5'b00000}+20] <= cur_in[20];
-                    buffer_1[{buffer_addr,5'b00000}+21] <= cur_in[21];
-                    buffer_1[{buffer_addr,5'b00000}+22] <= cur_in[22];
-                    buffer_1[{buffer_addr,5'b00000}+23] <= cur_in[23];
-                    buffer_1[{buffer_addr,5'b00000}+24] <= cur_in[24];
-                    buffer_1[{buffer_addr,5'b00000}+25] <= cur_in[25];
-                    buffer_1[{buffer_addr,5'b00000}+26] <= cur_in[26];
-                    buffer_1[{buffer_addr,5'b00000}+27] <= cur_in[27];
-                    buffer_1[{buffer_addr,5'b00000}+28] <= cur_in[28];
-                    buffer_1[{buffer_addr,5'b00000}+29] <= cur_in[29];
-                    buffer_1[{buffer_addr,5'b00000}+30] <= cur_in[30];
-                    buffer_1[{buffer_addr,5'b00000}+31] <= cur_in[31];
+                    buffer_1[{buffer_addr_late,5'b00000}+0]  <= cur_in[0];
+                    buffer_1[{buffer_addr_late,5'b00000}+1]  <= cur_in[1];
+                    buffer_1[{buffer_addr_late,5'b00000}+2]  <= cur_in[2];
+                    buffer_1[{buffer_addr_late,5'b00000}+3]  <= cur_in[3];
+                    buffer_1[{buffer_addr_late,5'b00000}+4]  <= cur_in[4];
+                    buffer_1[{buffer_addr_late,5'b00000}+5]  <= cur_in[5];
+                    buffer_1[{buffer_addr_late,5'b00000}+6]  <= cur_in[6];
+                    buffer_1[{buffer_addr_late,5'b00000}+7]  <= cur_in[7];
+                    buffer_1[{buffer_addr_late,5'b00000}+8]  <= cur_in[8];
+                    buffer_1[{buffer_addr_late,5'b00000}+9]  <= cur_in[9];
+                    buffer_1[{buffer_addr_late,5'b00000}+10] <= cur_in[10];
+                    buffer_1[{buffer_addr_late,5'b00000}+11] <= cur_in[11];
+                    buffer_1[{buffer_addr_late,5'b00000}+12] <= cur_in[12];
+                    buffer_1[{buffer_addr_late,5'b00000}+13] <= cur_in[13];
+                    buffer_1[{buffer_addr_late,5'b00000}+14] <= cur_in[14];
+                    buffer_1[{buffer_addr_late,5'b00000}+15] <= cur_in[15];
+                    buffer_1[{buffer_addr_late,5'b00000}+16] <= cur_in[16];
+                    buffer_1[{buffer_addr_late,5'b00000}+17] <= cur_in[17];
+                    buffer_1[{buffer_addr_late,5'b00000}+18] <= cur_in[18];
+                    buffer_1[{buffer_addr_late,5'b00000}+19] <= cur_in[19];
+                    buffer_1[{buffer_addr_late,5'b00000}+20] <= cur_in[20];
+                    buffer_1[{buffer_addr_late,5'b00000}+21] <= cur_in[21];
+                    buffer_1[{buffer_addr_late,5'b00000}+22] <= cur_in[22];
+                    buffer_1[{buffer_addr_late,5'b00000}+23] <= cur_in[23];
+                    buffer_1[{buffer_addr_late,5'b00000}+24] <= cur_in[24];
+                    buffer_1[{buffer_addr_late,5'b00000}+25] <= cur_in[25];
+                    buffer_1[{buffer_addr_late,5'b00000}+26] <= cur_in[26];
+                    buffer_1[{buffer_addr_late,5'b00000}+27] <= cur_in[27];
+                    buffer_1[{buffer_addr_late,5'b00000}+28] <= cur_in[28];
+                    buffer_1[{buffer_addr_late,5'b00000}+29] <= cur_in[29];
+                    buffer_1[{buffer_addr_late,5'b00000}+30] <= cur_in[30];
+                    buffer_1[{buffer_addr_late,5'b00000}+31] <= cur_in[31];
                 end
                 // buffer_1 is valid and write buffer_0
                 1'b1 : begin
-                    buffer_0[{buffer_addr,5'b00000}+0]  <= cur_in[0];
-                    buffer_0[{buffer_addr,5'b00000}+1]  <= cur_in[1];
-                    buffer_0[{buffer_addr,5'b00000}+2]  <= cur_in[2];
-                    buffer_0[{buffer_addr,5'b00000}+3]  <= cur_in[3];
-                    buffer_0[{buffer_addr,5'b00000}+4]  <= cur_in[4];
-                    buffer_0[{buffer_addr,5'b00000}+5]  <= cur_in[5];
-                    buffer_0[{buffer_addr,5'b00000}+6]  <= cur_in[6];
-                    buffer_0[{buffer_addr,5'b00000}+7]  <= cur_in[7];
-                    buffer_0[{buffer_addr,5'b00000}+8]  <= cur_in[8];
-                    buffer_0[{buffer_addr,5'b00000}+9]  <= cur_in[9];
-                    buffer_0[{buffer_addr,5'b00000}+10] <= cur_in[10];
-                    buffer_0[{buffer_addr,5'b00000}+11] <= cur_in[11];
-                    buffer_0[{buffer_addr,5'b00000}+12] <= cur_in[12];
-                    buffer_0[{buffer_addr,5'b00000}+13] <= cur_in[13];
-                    buffer_0[{buffer_addr,5'b00000}+14] <= cur_in[14];
-                    buffer_0[{buffer_addr,5'b00000}+15] <= cur_in[15];
-                    buffer_0[{buffer_addr,5'b00000}+16] <= cur_in[16];
-                    buffer_0[{buffer_addr,5'b00000}+17] <= cur_in[17];
-                    buffer_0[{buffer_addr,5'b00000}+18] <= cur_in[18];
-                    buffer_0[{buffer_addr,5'b00000}+19] <= cur_in[19];
-                    buffer_0[{buffer_addr,5'b00000}+20] <= cur_in[20];
-                    buffer_0[{buffer_addr,5'b00000}+21] <= cur_in[21];
-                    buffer_0[{buffer_addr,5'b00000}+22] <= cur_in[22];
-                    buffer_0[{buffer_addr,5'b00000}+23] <= cur_in[23];
-                    buffer_0[{buffer_addr,5'b00000}+24] <= cur_in[24];
-                    buffer_0[{buffer_addr,5'b00000}+25] <= cur_in[25];
-                    buffer_0[{buffer_addr,5'b00000}+26] <= cur_in[26];
-                    buffer_0[{buffer_addr,5'b00000}+27] <= cur_in[27];
-                    buffer_0[{buffer_addr,5'b00000}+28] <= cur_in[28];
-                    buffer_0[{buffer_addr,5'b00000}+29] <= cur_in[29];
-                    buffer_0[{buffer_addr,5'b00000}+30] <= cur_in[30];
-                    buffer_0[{buffer_addr,5'b00000}+31] <= cur_in[31];
+                    buffer_0[{buffer_addr_late,5'b00000}+0]  <= cur_in[0];
+                    buffer_0[{buffer_addr_late,5'b00000}+1]  <= cur_in[1];
+                    buffer_0[{buffer_addr_late,5'b00000}+2]  <= cur_in[2];
+                    buffer_0[{buffer_addr_late,5'b00000}+3]  <= cur_in[3];
+                    buffer_0[{buffer_addr_late,5'b00000}+4]  <= cur_in[4];
+                    buffer_0[{buffer_addr_late,5'b00000}+5]  <= cur_in[5];
+                    buffer_0[{buffer_addr_late,5'b00000}+6]  <= cur_in[6];
+                    buffer_0[{buffer_addr_late,5'b00000}+7]  <= cur_in[7];
+                    buffer_0[{buffer_addr_late,5'b00000}+8]  <= cur_in[8];
+                    buffer_0[{buffer_addr_late,5'b00000}+9]  <= cur_in[9];
+                    buffer_0[{buffer_addr_late,5'b00000}+10] <= cur_in[10];
+                    buffer_0[{buffer_addr_late,5'b00000}+11] <= cur_in[11];
+                    buffer_0[{buffer_addr_late,5'b00000}+12] <= cur_in[12];
+                    buffer_0[{buffer_addr_late,5'b00000}+13] <= cur_in[13];
+                    buffer_0[{buffer_addr_late,5'b00000}+14] <= cur_in[14];
+                    buffer_0[{buffer_addr_late,5'b00000}+15] <= cur_in[15];
+                    buffer_0[{buffer_addr_late,5'b00000}+16] <= cur_in[16];
+                    buffer_0[{buffer_addr_late,5'b00000}+17] <= cur_in[17];
+                    buffer_0[{buffer_addr_late,5'b00000}+18] <= cur_in[18];
+                    buffer_0[{buffer_addr_late,5'b00000}+19] <= cur_in[19];
+                    buffer_0[{buffer_addr_late,5'b00000}+20] <= cur_in[20];
+                    buffer_0[{buffer_addr_late,5'b00000}+21] <= cur_in[21];
+                    buffer_0[{buffer_addr_late,5'b00000}+22] <= cur_in[22];
+                    buffer_0[{buffer_addr_late,5'b00000}+23] <= cur_in[23];
+                    buffer_0[{buffer_addr_late,5'b00000}+24] <= cur_in[24];
+                    buffer_0[{buffer_addr_late,5'b00000}+25] <= cur_in[25];
+                    buffer_0[{buffer_addr_late,5'b00000}+26] <= cur_in[26];
+                    buffer_0[{buffer_addr_late,5'b00000}+27] <= cur_in[27];
+                    buffer_0[{buffer_addr_late,5'b00000}+28] <= cur_in[28];
+                    buffer_0[{buffer_addr_late,5'b00000}+29] <= cur_in[29];
+                    buffer_0[{buffer_addr_late,5'b00000}+30] <= cur_in[30];
+                    buffer_0[{buffer_addr_late,5'b00000}+31] <= cur_in[31];
                 end
             endcase
         else ;
