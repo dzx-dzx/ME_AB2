@@ -7,46 +7,43 @@ module RefSRAM_tb ();
 // Ports
     reg          clk        = 0;
     reg          rst           ;
-    reg  [ 63:0] ref_in        ;
+    reg          en_i          ;
+    wire [ 63:0] ref_in_i      ;
     wire [183:0] ref_out       ;
     wire         sram_ready    ;
     wire         next_block    ;
-    wire         read_en       ;
 
-    reg [ 7:0] mem     [0:5000];
-    reg [11:0] mem_addr        ;
+    wire [31:0] ref_mem_addr;
 
-    initial begin
-        $readmemh("./ref_test.txt", mem);
-    end
+    reg [63:0] ref_in;
+    reg        en    ;
 
     always @(posedge clk) begin
         if (rst) begin
-            mem_addr <= 0;
+            en_i   <= 0;
+            ref_in <= 0;
         end
         else begin
-            mem_addr <= mem_addr + 8;
+            en     <= en_i;
+            ref_in <= ref_in_i;
         end
     end
 
-    genvar i;
+    ref_mem U_ref_mem (
+        .en      (en          ),
+        .addr    (ref_mem_addr),
+        .ref_data(ref_in_i    )
+    );
 
-    generate
-        for (i = 0; i < 8; i = i + 1)
-            always @(posedge clk) begin
-                if (!rst)
-                    ref_in[8*i+7:(i)*8] = mem[mem_addr+i];
-            end
-    endgenerate
-
-    RefSRAM RefSRAM_dut (
-        .clk        (clk       ),
-        .rst        (rst       ),
-        .ref_in     (ref_in    ),
-        .read_en    (read_en   ),
-        .ref_out    (ref_out   ),
-        .sram_ready (sram_ready),
-        .next_block (next_block)
+    RefSRAM U_RefSRAM (
+        .clk            (clk         ),
+        .rst            (rst         ),
+        .en             (en          ),
+        .ref_in         (ref_in      ),
+        .ref_out        (ref_out     ),
+        .ref_mem_addr   (ref_mem_addr),
+        .sram_ready_late(sram_ready  ),
+        .next_block     (next_block  )
     );
 
     initial begin
@@ -58,7 +55,9 @@ module RefSRAM_tb ();
     initial begin
         clk = 0;
         rst = 1;
+        en_i = 0;
         #20 rst = 0;
+        #20 en_i = 1;
     end
 
     always
