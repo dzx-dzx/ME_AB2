@@ -5,6 +5,7 @@
 `include "AD_ARRAY.v"
 `include "MIN_16.v"
 `include "ADD_8.v"
+`include "ME_input_buffer.v"
 module ME #(
     parameter PIXELS_IN_BATCH = 16,
     parameter EDGE_LEN        = 8 ,

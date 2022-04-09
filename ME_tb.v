@@ -1,5 +1,7 @@
 `timescale 1ns/1ns
-
+`include "ME.v"
+`include "cur_mem.v"
+`include "ref_mem.v"
 module ME_tb ();
     reg clk ;
     reg rst ;
@@ -22,15 +24,6 @@ module ME_tb ();
     initial begin
         $dumpfile("wave.vcd");
         $dumpvars(0, ME_tb);
-    end
-
-    reg [7:0] cur_mem[ 0:8300000]; // Need 3840x2160 = 8294400
-    reg [7:0] ref_mem[0:23945800]; // Need 23945760
-
-
-    initial begin
-        $readmemh("./data_preprocess/data/cur_test.txt", cur_mem);
-        $readmemh("./data_preprocess/data/ref_test.txt", ref_mem);
     end
 
     // initial begin
