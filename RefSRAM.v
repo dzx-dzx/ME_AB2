@@ -1,3 +1,5 @@
+`timescale 1 ns / 1 ns
+`include "sadslspkb1p24x64m4b1w0cp0d0t0.v"
 // Cold boot requires 69 cycles
 
 

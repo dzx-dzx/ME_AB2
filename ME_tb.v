@@ -24,6 +24,20 @@ module ME_tb ();
         $dumpvars(0, ME_tb);
     end
 
+    reg [7:0] cur_mem[ 0:8300000]; // Need 3840x2160 = 8294400
+    reg [7:0] ref_mem[0:23945800]; // Need 23945760
+
+
+    initial begin
+        $readmemh("./data_preprocess/data/cur_test.txt", cur_mem);
+        $readmemh("./data_preprocess/data/ref_test.txt", ref_mem);
+    end
+
+    // initial begin
+    //     $readmemh("cur_test.txt", cur_mem);
+    //     $readmemh("ref_test.txt", ref_mem);
+    // end
+
     wire        cur_mem_en  ;
     wire        ref_mem_en  ;
     wire [31:0] cur_mem_addr;
