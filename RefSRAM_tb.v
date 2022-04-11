@@ -36,20 +36,20 @@ module RefSRAM_tb ();
     );
 
     RefSRAM U_RefSRAM (
-        .clk            (clk         ),
-        .rst            (rst         ),
-        .en             (en          ),
-        .ref_in         (ref_in      ),
-        .ref_out        (ref_out     ),
-        .ref_mem_addr   (ref_mem_addr),
-        .sram_ready_late(sram_ready  ),
-        .next_block     (next_block  )
+        .clk         (clk         ),
+        .rst         (rst         ),
+        .en          (en          ),
+        .ref_in      (ref_in      ),
+        .ref_out     (ref_out     ),
+        .ref_mem_addr(ref_mem_addr),
+        .sram_ready  (sram_ready  ),
+        .next_block  (next_block  )
     );
 
     initial begin
         $dumpfile("wave.vcd");
         $dumpvars(0, RefSRAM_tb);
-        #3000 $finish;
+        #4000 $finish;
     end
 
     initial begin
