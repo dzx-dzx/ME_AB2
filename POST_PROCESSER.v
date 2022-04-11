@@ -4,26 +4,33 @@ module POST_PROCESSOR #(parameter SAD_BIT_WIDTH=14) (
     input      [SAD_BIT_WIDTH-1:0] MSAD_interim      ,
     input      [              3:0] MSAD_index_interim,
     input                          en                ,
+    input      [              4:0] current_row,
     output reg [SAD_BIT_WIDTH-1:0] MSAD              ,
-    output reg [              3:0] MSAD_index
+    output reg [              4:0] MSAD_column       ,
+    output reg [              4:0] MSAD_row
 );
     always @(posedge clk or negedge rst) begin
         if(rst)begin
-            MSAD       <= {SAD_BIT_WIDTH{1'b1}};
-            MSAD_index <= 0;
+            MSAD        <= {SAD_BIT_WIDTH{1'b1}};
+            MSAD_column <= 0;
+            MSAD_row    <= 0;
         end
         else begin
             if(!en)begin
                 MSAD       <= {SAD_BIT_WIDTH{1'b1}};
-                MSAD_index <= 0;
+                MSAD_column <= 0;
+                MSAD_row   <= 0;
             end
             else if(MSAD>MSAD_interim)begin
-                MSAD       <= MSAD_interim;
-                MSAD_index <= MSAD_index_interim;
+                MSAD        <= MSAD_interim;
+                MSAD_column <= MSAD_index_interim;
+                MSAD_row    <= current_row;
+
             end
             else begin
-                MSAD       <= MSAD;
-                MSAD_index <= MSAD_index;
+                MSAD        <= MSAD;
+                MSAD_column <= MSAD_column;
+                MSAD_row    <= MSAD_row;
             end
         end
     end

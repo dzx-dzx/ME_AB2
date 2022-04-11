@@ -102,16 +102,18 @@ FIFO fifo (
 
 wire [EDGE_LEN*EDGE_LEN*BIT_DEPTH-1:0] current_input_complete;
 
+assign current_input_complete = cur_out;
+
 genvar i,j;
-generate
-    for(i=0;i<EDGE_LEN;i=i+1)
-        begin
-            for(j=0;j<EDGE_LEN;j=j+1)
-                begin
-                    assign current_input_complete[((EDGE_LEN-j-1)*EDGE_LEN+i+1)*BIT_DEPTH-1:((EDGE_LEN-j-1)*EDGE_LEN+i)*BIT_DEPTH] = cur_out[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH];
-                end
-        end
-endgenerate
+// generate
+//     for(i=0;i<EDGE_LEN;i=i+1)
+//         begin
+//             for(j=0;j<EDGE_LEN;j=j+1)
+//                 begin
+//                     assign current_input_complete[((EDGE_LEN-j-1)*EDGE_LEN+i+1)*BIT_DEPTH-1:((EDGE_LEN-j-1)*EDGE_LEN+i)*BIT_DEPTH] = cur_out[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH];
+//                 end
+//         end
+// endgenerate
 
 wire [(PSAD_BIT_WIDTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_addend_batch;
 
@@ -156,22 +158,23 @@ MIN_16 #(
     .min_index(MSAD_index_interim)
 );
 
-wire MSAD_data_processing;
-wire[4:0] MSAD_row;
+wire       MSAD_data_processing;
+wire [4:0] current_row         ;
 TIMER #(
-    .COLD_BOOT_CYCLE  (24),
-    .FULL_CYCLE       (23),
-    .OUTPUT_UP_PERIOD (16)
-) timer(
-    .clk(clk),
-    .rst(rst),
-    .en(sram_ready),
-    .o(MSAD_data_processing),
-    .valid_count(MSAD_row)
+    .COLD_BOOT_CYCLE (15),
+    .FULL_CYCLE      (23),
+    .OUTPUT_UP_PERIOD(16)
+) timer (
+    .clk        (clk                 ),
+    .rst        (rst                 ),
+    .en         (sram_ready          ),
+    .o          (MSAD_data_processing),
+    .valid_count(current_row         )
 );
 
-wire [SAD_BIT_WIDTH-1:0] MSAD      ;
-wire [              3:0] MSAD_index;
+wire [SAD_BIT_WIDTH-1:0] MSAD       ;
+wire [              4:0] MSAD_column;
+wire [              4:0] MSAD_row   ;
 
 POST_PROCESSOR #(.SAD_BIT_WIDTH(SAD_BIT_WIDTH)) post_processor (
     .clk               (clk                 ),
@@ -179,8 +182,10 @@ POST_PROCESSOR #(.SAD_BIT_WIDTH(SAD_BIT_WIDTH)) post_processor (
     .MSAD_interim      (MSAD_interim        ),
     .MSAD_index_interim(MSAD_index_interim  ),
     .en                (MSAD_data_processing),
+    .current_row       (current_row         ),
     .MSAD              (MSAD                ),
-    .MSAD_index        (MSAD_index          )
+    .MSAD_column       (MSAD_column         ),
+    .MSAD_row          (MSAD_row            )
 );
 
 endmodule
