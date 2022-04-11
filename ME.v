@@ -6,6 +6,8 @@
 `include "MIN_16.v"
 `include "ADD_8.v"
 `include "ME_input_buffer.v"
+`include "TIMER.v"
+`include "POST_PROCESSER.v"
 module ME #(
     parameter PIXELS_IN_BATCH = 16,
     parameter EDGE_LEN        = 8 ,
@@ -152,6 +154,33 @@ MIN_16 #(
     .min_array(SAD_batch_interim),
     .min(MSAD_interim),
     .min_index(MSAD_index_interim)
+);
+
+wire MSAD_data_processing;
+wire[4:0] MSAD_row;
+TIMER #(
+    .COLD_BOOT_CYCLE  (24),
+    .FULL_CYCLE       (23),
+    .OUTPUT_UP_PERIOD (16)
+) timer(
+    .clk(clk),
+    .rst(rst),
+    .en(sram_ready),
+    .o(MSAD_data_processing),
+    .valid_count(MSAD_row)
+);
+
+wire [SAD_BIT_WIDTH-1:0] MSAD      ;
+wire [              3:0] MSAD_index;
+
+POST_PROCESSOR #(.SAD_BIT_WIDTH(SAD_BIT_WIDTH)) post_processor (
+    .clk               (clk                 ),
+    .rst               (rst                 ),
+    .MSAD_interim      (MSAD_interim        ),
+    .MSAD_index_interim(MSAD_index_interim  ),
+    .en                (MSAD_data_processing),
+    .MSAD              (MSAD                ),
+    .MSAD_index        (MSAD_index          )
 );
 
 endmodule
