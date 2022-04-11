@@ -13,34 +13,35 @@ module RefSRAM (
     output reg          next_block    // Set high when CurBuffer need to past the next block
 );
 
-    parameter BLOCKS_PER_LINE = 482 ;
-    parameter MAX_BLOCK       = 1023;
+    parameter BLOCKS_PER_LINE       = 482;
+    parameter NEXT_CUR_BLOCK_OFFSET = 8  ;
 
-    parameter SRAM_DEPTH = 23;
+    parameter MAX_BLOCK  = 1023;
+    parameter SRAM_DEPTH = 23  ;
 
-    reg [4:0] addr           ;
+    reg [4:0] addr_cnt       ;
     reg [3:0] sram_is_written; // Which sram is at WRITE state
     reg [3:0] sram_read      ;
 
-    reg [4:0] addr_late;
+    reg [4:0] addr;
 
     // All SRAM share the same address
     always @(posedge clk) begin
         if (rst) begin
-            addr <= 0;
+            addr_cnt <= 0;
         end
         else if (en) begin
             // entry to next block
-            addr <= (addr == SRAM_DEPTH - 1) ? 0 : addr + 1;
+            addr_cnt <= (addr_cnt == SRAM_DEPTH - 1) ? 0 : addr_cnt + 1;
         end
     end
 
     always @(posedge clk) begin
         if (rst) begin
-            addr_late <= 0;
+            addr <= 0;
         end
         else if (en) begin
-            addr_late <= addr;
+            addr <= addr_cnt;
         end
     end
 
@@ -96,7 +97,7 @@ module RefSRAM (
             next_line       <= 0;
         end
         else if (en) begin
-            if(addr_late == 22) begin
+            if(addr == SRAM_DEPTH - 1) begin
                 block_cnt <= block_cnt + 1;
 
                 case (block_cnt)
@@ -119,7 +120,7 @@ module RefSRAM (
         if (rst)
             sram_read <= 4'b0000;
         else if (en) begin
-            if (addr_late == 0) begin
+            if (addr == 0) begin
                 if (sram_is_written == 4'b0000)
                     sram_read <= {sram_read[2:0], sram_read[3]};
                 else
@@ -142,7 +143,7 @@ module RefSRAM (
         if (rst)
             next_block <= 0;
         else if(en) begin
-            if (sram_ready && addr == 8)
+            if (sram_ready && addr_cnt == NEXT_CUR_BLOCK_OFFSET)
                 next_block <= 1;
             else next_block <= 0;
         end
@@ -168,51 +169,51 @@ module RefSRAM (
 
 
     sadslspkb1p24x64m4b1w0cp0d0t0 U_SRAM_1 (
-        .Q    (q_1      ),
-        .ADR  (addr_late),
-        .D    (ref_in   ),
-        .WE   (we_1     ),
-        .ME   (me       ),
-        .CLK  (clk      ),
-        .TEST1(test     ),
-        .RME  (rme      ),
-        .RM   (rm       )
+        .Q    (q_1   ),
+        .ADR  (addr  ),
+        .D    (ref_in),
+        .WE   (we_1  ),
+        .ME   (me    ),
+        .CLK  (clk   ),
+        .TEST1(test  ),
+        .RME  (rme   ),
+        .RM   (rm    )
     );
 
     sadslspkb1p24x64m4b1w0cp0d0t0 U_SRAM_2 (
-        .Q    (q_2      ),
-        .ADR  (addr_late),
-        .D    (ref_in   ),
-        .WE   (we_2     ),
-        .ME   (me       ),
-        .CLK  (clk      ),
-        .TEST1(test     ),
-        .RME  (rme      ),
-        .RM   (rm       )
+        .Q    (q_2   ),
+        .ADR  (addr  ),
+        .D    (ref_in),
+        .WE   (we_2  ),
+        .ME   (me    ),
+        .CLK  (clk   ),
+        .TEST1(test  ),
+        .RME  (rme   ),
+        .RM   (rm    )
     );
 
     sadslspkb1p24x64m4b1w0cp0d0t0 U_SRAM_3 (
-        .Q    (q_3      ),
-        .ADR  (addr_late),
-        .D    (ref_in   ),
-        .WE   (we_3     ),
-        .ME   (me       ),
-        .CLK  (clk      ),
-        .TEST1(test     ),
-        .RME  (rme      ),
-        .RM   (rm       )
+        .Q    (q_3   ),
+        .ADR  (addr  ),
+        .D    (ref_in),
+        .WE   (we_3  ),
+        .ME   (me    ),
+        .CLK  (clk   ),
+        .TEST1(test  ),
+        .RME  (rme   ),
+        .RM   (rm    )
     );
 
     sadslspkb1p24x64m4b1w0cp0d0t0 U_SRAM_4 (
-        .Q    (q_4      ),
-        .ADR  (addr_late),
-        .D    (ref_in   ),
-        .WE   (we_4     ),
-        .ME   (me       ),
-        .CLK  (clk      ),
-        .TEST1(test     ),
-        .RME  (rme      ),
-        .RM   (rm       )
+        .Q    (q_4   ),
+        .ADR  (addr  ),
+        .D    (ref_in),
+        .WE   (we_4  ),
+        .ME   (me    ),
+        .CLK  (clk   ),
+        .TEST1(test  ),
+        .RME  (rme   ),
+        .RM   (rm    )
     );
 
 endmodule
