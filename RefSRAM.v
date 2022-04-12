@@ -13,8 +13,8 @@ module RefSRAM (
     output reg          next_block    // Set high when CurBuffer need to past the next block
 );
 
-    parameter BLOCKS_PER_LINE       = 482;
-    parameter NEXT_CUR_BLOCK_OFFSET = 8  ;
+    parameter BLOCKS_PER_LINE       = 5;
+    parameter NEXT_CUR_BLOCK_OFFSET = 8;
 
     parameter MAX_BLOCK  = 1023;
     parameter SRAM_DEPTH = 23  ;
@@ -112,6 +112,7 @@ module RefSRAM (
                     default : sram_is_written <= {sram_is_written[2:0], sram_is_written[3]};
                 endcase
             end
+            else next_line <= 0;
         end
     end
 
@@ -157,7 +158,6 @@ module RefSRAM (
         else if (en) begin
             if (next_line) begin
                 sram_ready <= 0;
-                next_line  <= 0;
             end
             else if (sram_ready == 0 && sram_is_written == 4'b1000) begin
                 sram_ready <= 1;
