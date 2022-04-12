@@ -1,23 +1,23 @@
 // +FHDR-------------------------------------------------------------------
-// FILE NAME: FIFO
-// TYPE: verilog
+// FILE NAME: FIFO.v
+// TYPE: module
 // DEPARTMENT:
 // AUTHOR: Zhixing Zhang
 // AUTHOR'S EMAIL: 785584784@qq.com
 // ------------------------------------------------------------------------
-// KEYWORDS: FIFO
+// KEYWORDS: FIFO delay_ouput
 // ------------------------------------------------------------------------
 // PARAMETERS
 //
 // ------------------------------------------------------------------------
 // REUSE ISSUES
-// Reset Strategy:
-// Clock Domains:
+// Reset Strategy: synchronous and high_valid
+// Clock Domains: global
 // Critical Timing:
 // Test Features:
 // Asynchronous I/F:
 // Scan Methodology:
-// Instantiations:
+// Instantiations: FIFO_0 FIFO_1to6 FIFO_7
 // -FHDR-------------------------------------------------------------------
 
 module FIFO (
