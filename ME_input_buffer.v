@@ -1,3 +1,25 @@
+// +FHDR-------------------------------------------------------------------
+// FILE NAME:
+// TYPE:
+// DEPARTMENT:
+// AUTHOR:
+// AUTHOR'S EMAIL:
+// ------------------------------------------------------------------------
+// KEYWORDS:
+// ------------------------------------------------------------------------
+// PARAMETERS
+//
+// ------------------------------------------------------------------------
+// REUSE ISSUES
+// Reset Strategy:
+// Clock Domains:
+// Critical Timing:
+// Test Features:
+// Asynchronous I/F:
+// Scan Methodology:
+// Instantiations:
+// -FHDR-------------------------------------------------------------------
+
 module ME_input_buffer (
     input             clk     ,
     input             rst     ,

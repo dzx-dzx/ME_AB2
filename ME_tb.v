@@ -1,7 +1,4 @@
 `timescale 1ns/1ns
-`include "ME.v"
-`include "cur_mem.v"
-`include "ref_mem.v"
 module ME_tb ();
     reg clk ;
     reg rst ;

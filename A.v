@@ -1,3 +1,25 @@
+// +FHDR-------------------------------------------------------------------
+// FILE NAME:
+// TYPE:
+// DEPARTMENT:
+// AUTHOR:
+// AUTHOR'S EMAIL:
+// ------------------------------------------------------------------------
+// KEYWORDS:
+// ------------------------------------------------------------------------
+// PARAMETERS
+//
+// ------------------------------------------------------------------------
+// REUSE ISSUES
+// Reset Strategy:
+// Clock Domains:
+// Critical Timing:
+// Test Features:
+// Asynchronous I/F:
+// Scan Methodology:
+// Instantiations:
+// -FHDR-------------------------------------------------------------------
+
 module A #(
     parameter PIXELS_IN_BATCH  = 16,
     parameter PSAD_BIT_DEPTH   = 14,

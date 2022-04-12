@@ -20,7 +20,7 @@ uniquify
 source me.con
 
 #Saving sdc
-write_sdc ../outputs/idct_chip_clk_with_driving.sdc
+write_sdc ../outputs/me_chip_clk_with_driving.sdc
 
 #Compile
 compile
