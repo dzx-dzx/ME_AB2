@@ -41,7 +41,7 @@ module ME #(
     output wire [SAD_BIT_WIDTH-1:0] MSAD        ,
     output wire [              4:0] MSAD_column ,
     output wire [              4:0] MSAD_row    ,
-    output wire                     data_valid
+    output                          data_valid
 );
 
     wire        en    ;
@@ -181,11 +181,12 @@ module ME #(
         .FULL_CYCLE      (23),
         .OUTPUT_UP_PERIOD(16)
     ) timer (
-        .clk        (clk                 ),
-        .rst        (rst                 ),
-        .en         (sram_ready          ),
-        .o          (MSAD_data_processing),
-        .valid_count(current_row         )
+        .clk               (clk                 ),
+        .rst               (rst                 ),
+        .en                (sram_ready          ),
+        .o                 (MSAD_data_processing),
+        .valid_count       (current_row         ),
+        .output_low_started(data_valid          )
     );
 
 
@@ -200,7 +201,5 @@ module ME #(
         .MSAD_column       (MSAD_column         ),
         .MSAD_row          (MSAD_row            )
     );
-
-    assign data_valid = ~MSAD_data_processing;
 
 endmodule

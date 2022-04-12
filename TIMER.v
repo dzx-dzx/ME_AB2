@@ -25,11 +25,12 @@ module TIMER #(
     parameter FULL_CYCLE       = 23,
     parameter OUTPUT_UP_PERIOD = 16
 ) (
-    input            clk        ,
-    input            rst        ,
-    input            en         ,
-    output reg       o          ,
-    output reg [4:0] valid_count
+    input            clk               ,
+    input            rst               ,
+    input            en                ,
+    output reg       o                 ,
+    output reg [4:0] valid_count       ,
+    output reg       output_low_started
 );
     localparam COLD_BOOT = 1'b0;
     localparam COUNT     = 1'b1;
@@ -99,6 +100,7 @@ module TIMER #(
     end
 
     always @(*) begin
-        o = state==COLD_BOOT?0:valid_count<OUTPUT_UP_PERIOD;
+        o                  = state==COLD_BOOT?0:valid_count<OUTPUT_UP_PERIOD;
+        output_low_started = state==COLD_BOOT?0:valid_count==OUTPUT_UP_PERIOD;
     end
 endmodule
