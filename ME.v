@@ -7,7 +7,7 @@
 `include "ADD_8.v"
 `include "ME_input_buffer.v"
 `include "TIMER.v"
-`include "POST_PROCESSER.v"
+`include "POST_PROCESSOR.v"
 module ME #(
     parameter PIXELS_IN_BATCH = 16,
     parameter EDGE_LEN        = 8 ,
