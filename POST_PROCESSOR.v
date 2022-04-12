@@ -9,7 +9,7 @@ module POST_PROCESSOR #(parameter SAD_BIT_WIDTH=14) (
     output reg [              4:0] MSAD_column       ,
     output reg [              4:0] MSAD_row
 );
-    always @(posedge clk or negedge rst) begin
+    always @(posedge clk) begin
         if(rst)begin
             MSAD        <= {SAD_BIT_WIDTH{1'b1}};
             MSAD_column <= 0;
