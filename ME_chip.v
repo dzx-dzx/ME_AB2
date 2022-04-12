@@ -1,4 +1,4 @@
-module ME_chip(clk,rst,en_i,cur_in_i,ref_in_i,cur_mem_addr,ref_mem_addr,cur_mem_en,ref_mem_en);
+module ME_chip(clk,rst,en_i,cur_in_i,ref_in_i,cur_mem_addr,ref_mem_addr,cur_mem_en,ref_mem_en,MSAD_interim,MSAD_index_interim);
 
 input clk;
 input rst;
@@ -9,6 +9,8 @@ output [31:0] cur_mem_addr;
 output [31:0] ref_mem_addr;
 output cur_mem_en;
 output ref_mem_en;
+output [13:0] MSAD_interim;
+output [3:0] MSAD_index_interim;
 
 
 wire net_clk;
@@ -20,6 +22,8 @@ wire net_cur_mem_en;
 wire net_ref_mem_en;
 wire [31:0] net_cur_mem_addr;
 wire [31:0] net_ref_mem_addr;
+wire [13:0] net_MSAD_interim;
+wire [3:0] net_MSAD_index_interim;
 
 HPDWUW1416DGP
 	HPDWUW1416DGP_clk(.PAD(clk), .C(net_clk), .IE(1'b1)),
@@ -188,7 +192,25 @@ HPDWUW1416DGP
 	HPDWUW1416DGP_ref_mem_addr28(.PAD(ref_mem_addr[28]), .I(net_ref_mem_addr[28]), .OE(1'b1)),
 	HPDWUW1416DGP_ref_mem_addr29(.PAD(ref_mem_addr[29]), .I(net_ref_mem_addr[29]), .OE(1'b1)),
 	HPDWUW1416DGP_ref_mem_addr30(.PAD(ref_mem_addr[30]), .I(net_ref_mem_addr[30]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr31(.PAD(ref_mem_addr[31]), .I(net_ref_mem_addr[31]), .OE(1'b1));
+	HPDWUW1416DGP_ref_mem_addr31(.PAD(ref_mem_addr[31]), .I(net_ref_mem_addr[31]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim0(.PAD(MSAD_interim[0]), .I(net_MSAD_interim[0]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim1(.PAD(MSAD_interim[1]), .I(net_MSAD_interim[1]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim2(.PAD(MSAD_interim[2]), .I(net_MSAD_interim[2]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim3(.PAD(MSAD_interim[3]), .I(net_MSAD_interim[3]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim4(.PAD(MSAD_interim[4]), .I(net_MSAD_interim[4]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim5(.PAD(MSAD_interim[5]), .I(net_MSAD_interim[5]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim6(.PAD(MSAD_interim[6]), .I(net_MSAD_interim[6]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim7(.PAD(MSAD_interim[7]), .I(net_MSAD_interim[7]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim8(.PAD(MSAD_interim[8]), .I(net_MSAD_interim[8]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim9(.PAD(MSAD_interim[9]), .I(net_MSAD_interim[9]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim10(.PAD(MSAD_interim[10]), .I(net_MSAD_interim[10]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim11(.PAD(MSAD_interim[11]), .I(net_MSAD_interim[11]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim12(.PAD(MSAD_interim[12]), .I(net_MSAD_interim[12]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_interim13(.PAD(MSAD_interim[13]), .I(net_MSAD_interim[13]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_index_interim0(.PAD(MSAD_index_interim[0]), .I(net_MSAD_index_interim[0]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_index_interim1(.PAD(MSAD_index_interim[1]), .I(net_MSAD_index_interim[1]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_index_interim2(.PAD(MSAD_index_interim[2]), .I(net_MSAD_index_interim[2]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_index_interim3(.PAD(MSAD_index_interim[3]), .I(net_MSAD_index_interim[3]), .OE(1'b1));
 
-ME inst_ME(.clk(net_clk),.rst(net_rst),.en_i(net_en_i),.cur_in_i(net_cur_in_i),.ref_in_i(net_ref_in_i),.cur_mem_en(net_cur_mem_en),.ref_mem_en(net_ref_mem_en),.cur_mem_addr(net_cur_mem_addr),.ref_mem_addr(net_ref_mem_addr)); 
+ME inst_ME(.clk(net_clk),.rst(net_rst),.en_i(net_en_i),.cur_in_i(net_cur_in_i),.ref_in_i(net_ref_in_i),.cur_mem_en(net_cur_mem_en),.ref_mem_en(net_ref_mem_en),.cur_mem_addr(net_cur_mem_addr),.ref_mem_addr(net_ref_mem_addr),.MSAD_interim(net_MSAD_interim),.MSAD_index_interim(net_MSAD_index_interim));
 endmodule
