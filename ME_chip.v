@@ -1,4 +1,4 @@
-module ME_chip(clk,rst,en_i,cur_in_i,ref_in_i,cur_mem_addr,ref_mem_addr,cur_mem_en,ref_mem_en,MSAD_interim,MSAD_index_interim);
+module ME_chip(clk,rst,en_i,cur_in_i,ref_in_i,cur_mem_addr,ref_mem_addr,cur_mem_en,ref_mem_en,MSAD,MSAD_column,MSAD_row,data_valid);
 
 input clk;
 input rst;
@@ -9,8 +9,10 @@ output [31:0] cur_mem_addr;
 output [31:0] ref_mem_addr;
 output cur_mem_en;
 output ref_mem_en;
-output [13:0] MSAD_interim;
-output [3:0] MSAD_index_interim;
+output [13:0] MSAD;
+output [4:0] MSAD_column;
+output [4:0] MSAD_row ;
+output data_valid;
 
 
 wire net_clk;
@@ -20,10 +22,12 @@ wire [31:0] net_cur_in_i;
 wire [63:0] net_ref_in_i;
 wire net_cur_mem_en;
 wire net_ref_mem_en;
+wire net_data_valid;
 wire [31:0] net_cur_mem_addr;
 wire [31:0] net_ref_mem_addr;
-wire [13:0] net_MSAD_interim;
-wire [3:0] net_MSAD_index_interim;
+wire [13:0] net_MSAD;
+wire [4:0] net_MSAD_column;
+wire [4:0] net_MSAD_row;
 
 HPDWUW1416DGP
 	HPDWUW1416DGP_clk(.PAD(clk), .C(net_clk), .IE(1'b1)),
@@ -129,6 +133,7 @@ HPDWUW1416DGP
 HPDWUW1416DGP
 	HPDWUW1416DGP_cur_mem_en(.PAD(cur_mem_en), .I(net_cur_mem_en), .OE(1'b1)),
 	HPDWUW1416DGP_ref_mem_en(.PAD(ref_mem_en), .I(net_ref_mem_en), .OE(1'b1)),
+	HPDWUW1416DGP_data_valid(.PAD(data_valid), .I(net_data_valid), .OE(1'b1)),
 	HPDWUW1416DGP_cur_mem_addr0(.PAD(cur_mem_addr[0]), .I(net_cur_mem_addr[0]), .OE(1'b1)),
 	HPDWUW1416DGP_cur_mem_addr1(.PAD(cur_mem_addr[1]), .I(net_cur_mem_addr[1]), .OE(1'b1)),
 	HPDWUW1416DGP_cur_mem_addr2(.PAD(cur_mem_addr[2]), .I(net_cur_mem_addr[2]), .OE(1'b1)),
@@ -193,24 +198,30 @@ HPDWUW1416DGP
 	HPDWUW1416DGP_ref_mem_addr29(.PAD(ref_mem_addr[29]), .I(net_ref_mem_addr[29]), .OE(1'b1)),
 	HPDWUW1416DGP_ref_mem_addr30(.PAD(ref_mem_addr[30]), .I(net_ref_mem_addr[30]), .OE(1'b1)),
 	HPDWUW1416DGP_ref_mem_addr31(.PAD(ref_mem_addr[31]), .I(net_ref_mem_addr[31]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim0(.PAD(MSAD_interim[0]), .I(net_MSAD_interim[0]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim1(.PAD(MSAD_interim[1]), .I(net_MSAD_interim[1]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim2(.PAD(MSAD_interim[2]), .I(net_MSAD_interim[2]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim3(.PAD(MSAD_interim[3]), .I(net_MSAD_interim[3]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim4(.PAD(MSAD_interim[4]), .I(net_MSAD_interim[4]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim5(.PAD(MSAD_interim[5]), .I(net_MSAD_interim[5]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim6(.PAD(MSAD_interim[6]), .I(net_MSAD_interim[6]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim7(.PAD(MSAD_interim[7]), .I(net_MSAD_interim[7]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim8(.PAD(MSAD_interim[8]), .I(net_MSAD_interim[8]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim9(.PAD(MSAD_interim[9]), .I(net_MSAD_interim[9]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim10(.PAD(MSAD_interim[10]), .I(net_MSAD_interim[10]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim11(.PAD(MSAD_interim[11]), .I(net_MSAD_interim[11]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim12(.PAD(MSAD_interim[12]), .I(net_MSAD_interim[12]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_interim13(.PAD(MSAD_interim[13]), .I(net_MSAD_interim[13]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_index_interim0(.PAD(MSAD_index_interim[0]), .I(net_MSAD_index_interim[0]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_index_interim1(.PAD(MSAD_index_interim[1]), .I(net_MSAD_index_interim[1]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_index_interim2(.PAD(MSAD_index_interim[2]), .I(net_MSAD_index_interim[2]), .OE(1'b1)),
-	HPDWUW1416DGP_MSAD_index_interim3(.PAD(MSAD_index_interim[3]), .I(net_MSAD_index_interim[3]), .OE(1'b1));
+	HPDWUW1416DGP_MSAD0(.PAD(MSAD[0]), .I(net_MSAD[0]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD1(.PAD(MSAD[1]), .I(net_MSAD[1]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD2(.PAD(MSAD[2]), .I(net_MSAD[2]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD3(.PAD(MSAD[3]), .I(net_MSAD[3]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD4(.PAD(MSAD[4]), .I(net_MSAD[4]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD5(.PAD(MSAD[5]), .I(net_MSAD[5]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD6(.PAD(MSAD[6]), .I(net_MSAD[6]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD7(.PAD(MSAD[7]), .I(net_MSAD[7]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD8(.PAD(MSAD[8]), .I(net_MSAD[8]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD9(.PAD(MSAD[9]), .I(net_MSAD[9]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD10(.PAD(MSAD[10]), .I(net_MSAD[10]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD11(.PAD(MSAD[11]), .I(net_MSAD[11]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD12(.PAD(MSAD[12]), .I(net_MSAD[12]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD13(.PAD(MSAD[13]), .I(net_MSAD[13]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_column0(.PAD(MSAD_column[0]), .I(net_MSAD_column[0]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_column1(.PAD(MSAD_column[1]), .I(net_MSAD_column[1]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_column2(.PAD(MSAD_column[2]), .I(net_MSAD_column[2]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_column3(.PAD(MSAD_column[3]), .I(net_MSAD_column[3]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_column4(.PAD(MSAD_column[4]), .I(net_MSAD_column[4]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_row0(.PAD(MSAD_row[0]), .I(net_MSAD_row[0]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_row1(.PAD(MSAD_row[1]), .I(net_MSAD_row[1]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_row2(.PAD(MSAD_row[2]), .I(net_MSAD_row[2]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_row3(.PAD(MSAD_row[3]), .I(net_MSAD_row[3]), .OE(1'b1)),
+	HPDWUW1416DGP_MSAD_row4(.PAD(MSAD_row[4]), .I(net_MSAD_row[4]), .OE(1'b1));
 
-ME inst_ME(.clk(net_clk),.rst(net_rst),.en_i(net_en_i),.cur_in_i(net_cur_in_i),.ref_in_i(net_ref_in_i),.cur_mem_en(net_cur_mem_en),.ref_mem_en(net_ref_mem_en),.cur_mem_addr(net_cur_mem_addr),.ref_mem_addr(net_ref_mem_addr),.MSAD_interim(net_MSAD_interim),.MSAD_index_interim(net_MSAD_index_interim));
+ME inst_ME(.clk(net_clk),.rst(net_rst),.en_i(net_en_i),.cur_in_i(net_cur_in_i),.ref_in_i(net_ref_in_i),.cur_mem_en(net_cur_mem_en),.ref_mem_en(net_ref_mem_en),.data_valid(net_data_valid),.cur_mem_addr(net_cur_mem_addr),.ref_mem_addr(net_ref_mem_addr),.MSAD(net_MSAD),.MSAD_column(net_MSAD_column),.MSAD_row(net_MSAD_row));
 endmodule

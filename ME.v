@@ -24,10 +24,10 @@ module ME #(
     output wire [             31:0] ref_mem_addr      ,
     output wire                     cur_mem_en        ,
     output wire                     ref_mem_en        ,
-    output wire [SAD_BIT_WIDTH-1:0] MSAD       ,
-    output wire [              4:0] MSAD_column,
-    output wire [              4:0] MSAD_row,
-    output wire data_valid
+    output wire [SAD_BIT_WIDTH-1:0] MSAD              ,
+    output wire [              4:0] MSAD_column       ,
+    output wire [              4:0] MSAD_row          ,
+    output wire                     data_valid
 );
 
 wire        en    ;
@@ -49,11 +49,9 @@ assign cur_mem_en = en;
 assign ref_mem_en = en;
 
 // RefSRAM related
-wire         ref_read_en ;
-reg  [ 13:0] ref_line_cnt; //Every row (4096) costs 11086 (482 blocks * 23 cycles/block) cycles, which needs 14 bits to store and count.
-wire [183:0] ref_out     ;
-wire         sram_ready  ; // When the SRAM is ready, set high for one cycle.
-wire         next_block  ;
+wire [183:0] ref_out   ;
+wire         sram_ready; // When the SRAM is ready, set high for one cycle.
+wire         next_block;
 
 
 // -------------------------
@@ -106,7 +104,8 @@ wire [EDGE_LEN*EDGE_LEN*BIT_DEPTH-1:0] current_input_complete;
 
 assign current_input_complete = cur_out;
 
-genvar i,j;
+genvar i;
+genvar j;
 // generate
 //     for(i=0;i<EDGE_LEN;i=i+1)
 //         begin
