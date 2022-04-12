@@ -1,11 +1,11 @@
 // +FHDR-------------------------------------------------------------------
-// FILE NAME:
-// TYPE:
+// FILE NAME: FIFO
+// TYPE: verilog
 // DEPARTMENT:
-// AUTHOR:
-// AUTHOR'S EMAIL:
+// AUTHOR: Zhixing Zhang
+// AUTHOR'S EMAIL: 785584784@qq.com
 // ------------------------------------------------------------------------
-// KEYWORDS:
+// KEYWORDS: FIFO
 // ------------------------------------------------------------------------
 // PARAMETERS
 //
