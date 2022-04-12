@@ -43,7 +43,7 @@ module TIMER #(
                 state_next = COUNT;
             end
         else if(state==COUNT)state_next=COUNT;
-        else state=COLD_BOOT;
+        else state_next=COLD_BOOT;
     end
 
     always @(*) begin
