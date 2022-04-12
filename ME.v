@@ -24,8 +24,10 @@ module ME #(
     output wire [             31:0] ref_mem_addr      ,
     output wire                     cur_mem_en        ,
     output wire                     ref_mem_en        ,
-    output wire [SAD_BIT_WIDTH-1:0] MSAD_interim      ,
-    output wire [              3:0] MSAD_index_interim
+    output wire [SAD_BIT_WIDTH-1:0] MSAD       ,
+    output wire [              4:0] MSAD_column,
+    output wire [              4:0] MSAD_row,
+    output wire data_valid
 );
 
 wire        en    ;
@@ -150,11 +152,12 @@ generate
         end
 endgenerate
 
-MIN_16 #(
-    .ELEMENT_BIT_DEPTH(SAD_BIT_WIDTH)
-) min_16(
-    .min_array(SAD_batch_interim),
-    .min(MSAD_interim),
+wire [SAD_BIT_WIDTH-1:0] MSAD_interim      ;
+wire [              3:0] MSAD_index_interim;
+
+MIN_16 #(.ELEMENT_BIT_DEPTH(SAD_BIT_WIDTH)) min_16 (
+    .min_array(SAD_batch_interim ),
+    .min      (MSAD_interim      ),
     .min_index(MSAD_index_interim)
 );
 
@@ -172,9 +175,6 @@ TIMER #(
     .valid_count(current_row         )
 );
 
-wire [SAD_BIT_WIDTH-1:0] MSAD       ;
-wire [              4:0] MSAD_column;
-wire [              4:0] MSAD_row   ;
 
 POST_PROCESSOR #(.SAD_BIT_WIDTH(SAD_BIT_WIDTH)) post_processor (
     .clk               (clk                 ),
@@ -187,5 +187,7 @@ POST_PROCESSOR #(.SAD_BIT_WIDTH(SAD_BIT_WIDTH)) post_processor (
     .MSAD_column       (MSAD_column         ),
     .MSAD_row          (MSAD_row            )
 );
+
+assign data_valid = ~MSAD_data_processing;
 
 endmodule
