@@ -16,7 +16,7 @@ analyze -format verilog ../rtl/ME_AB2/MIN_16.v
 analyze -format verilog ../rtl/ME_AB2/MIN_LEAF.v
 analyze -format verilog ../rtl/ME_AB2/RefSRAM.v
 analyze -format verilog ../rtl/ME_AB2/POST_PROCESSOR.v
-analyze -format verrilog ../rtl/ME_AB2/TIMER.v
+analyze -format verilog ../rtl/ME_AB2/TIMER.v
 analyze -format verilog ../rtl/ME_AB2/ME.v
 analyze -format verilog ../rtl/ME_AB2/ME_chip.v
 elaborate ME_chip
