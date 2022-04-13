@@ -1,23 +1,24 @@
 // +FHDR-------------------------------------------------------------------
-// FILE NAME:
-// TYPE:
+// FILE NAME: RefSRAM.v
+// TYPE: Module
 // DEPARTMENT:
-// AUTHOR:
-// AUTHOR'S EMAIL:
+// AUTHOR: Yaotian Liu
+// AUTHOR'S EMAIL: henry_liu@sjtu.edu.cn
 // ------------------------------------------------------------------------
-// KEYWORDS:
+// KEYWORDS: Ref Frame data process and store
 // ------------------------------------------------------------------------
 // PARAMETERS
-//
+// BLOCKS_PER_LINE       = 482
+// NEXT_CUR_BLOCK_OFFSET = 8
 // ------------------------------------------------------------------------
 // REUSE ISSUES
-// Reset Strategy:
-// Clock Domains:
+// Reset Strategy: Synchronous & High valid
+// Clock Domains: Global
 // Critical Timing:
 // Test Features:
 // Asynchronous I/F:
 // Scan Methodology:
-// Instantiations:
+// Instantiations: sadslspkb1p24x64m4b1w0cp0d0t0
 // -FHDR-------------------------------------------------------------------
 
 `timescale 1 ns / 1 ns
@@ -98,18 +99,18 @@ module RefSRAM (
         if (en) begin
             case (sram_read)
                 4'b0001 :
-                    ref_out <= {q_2, q_3, q_4[63:8]};
+                    ref_out = {q_2, q_3, q_4[63:8]};
                 4'b0010 :
-                    ref_out <= {q_3, q_4, q_1[63:8]};
+                    ref_out = {q_3, q_4, q_1[63:8]};
                 4'b0100 :
-                    ref_out <= {q_4, q_1, q_2[63:8]};
+                    ref_out = {q_4, q_1, q_2[63:8]};
                 4'b1000 :
-                    ref_out <= {q_1, q_2, q_3[63:8]};
+                    ref_out = {q_1, q_2, q_3[63:8]};
                 default :
-                    ref_out <= 0;
+                    ref_out = 0;
             endcase
         end
-        else ref_out <= 0;
+        else ref_out = 0;
     end
 
     always @(posedge clk) begin

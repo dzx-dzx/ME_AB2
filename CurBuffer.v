@@ -1,23 +1,23 @@
 // +FHDR-------------------------------------------------------------------
-// FILE NAME:
-// TYPE:
+// FILE NAME: CurBuffer.v
+// TYPE: Module
 // DEPARTMENT:
-// AUTHOR:
-// AUTHOR'S EMAIL:
+// AUTHOR: Yaotian Liu
+// AUTHOR'S EMAIL: henry_liu@sjtu.edu.cn
 // ------------------------------------------------------------------------
 // KEYWORDS:
 // ------------------------------------------------------------------------
 // PARAMETERS
-//
+// None
 // ------------------------------------------------------------------------
 // REUSE ISSUES
-// Reset Strategy:
-// Clock Domains:
+// Reset Strategy: Synchronous & High valid
+// Clock Domains: Global
 // Critical Timing:
 // Test Features:
 // Asynchronous I/F:
 // Scan Methodology:
-// Instantiations:
+// Instantiations: ~
 // -FHDR-------------------------------------------------------------------
 
 module CurBuffer (
@@ -127,148 +127,148 @@ module CurBuffer (
                 case ({half, inter_state})
                     // next block in in buffer 0
                     4'b0000 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                     4'b0001 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                     4'b0010 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                     4'b0011 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                     4'b0100 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                     4'b0101 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                     4'b0110 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                     4'b1000 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     4'b1001 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     4'b1010 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     4'b1011 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     4'b1100 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     4'b1101 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     4'b1110 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     default :
                         {out_row_8, out_row_7, out_row_6, out_row_5,
-                            out_row_4, out_row_3, out_row_2, out_row_1} <= 0;
+                            out_row_4, out_row_3, out_row_2, out_row_1} = 0;
                 endcase
             end
             // Not at inter
@@ -276,31 +276,31 @@ module CurBuffer (
                 case (half)
                     // Buffer 0 in cur block
                     1'b0 : begin
-                        out_row_1 <= buffer_0[63 : 0];
-                        out_row_2 <= buffer_0[127 : 64];
-                        out_row_3 <= buffer_0[191 : 128];
-                        out_row_4 <= buffer_0[255 : 192];
-                        out_row_5 <= buffer_0[319 : 256];
-                        out_row_6 <= buffer_0[383 : 320];
-                        out_row_7 <= buffer_0[447 : 384];
-                        out_row_8 <= buffer_0[511 : 448];
+                        out_row_1 = buffer_0[63 : 0];
+                        out_row_2 = buffer_0[127 : 64];
+                        out_row_3 = buffer_0[191 : 128];
+                        out_row_4 = buffer_0[255 : 192];
+                        out_row_5 = buffer_0[319 : 256];
+                        out_row_6 = buffer_0[383 : 320];
+                        out_row_7 = buffer_0[447 : 384];
+                        out_row_8 = buffer_0[511 : 448];
                     end
                     // Buffer 1 in cur block
                     1'b1 : begin
-                        out_row_1 <= buffer_1[63 : 0];
-                        out_row_2 <= buffer_1[127 : 64];
-                        out_row_3 <= buffer_1[191 : 128];
-                        out_row_4 <= buffer_1[255 : 192];
-                        out_row_5 <= buffer_1[319 : 256];
-                        out_row_6 <= buffer_1[383 : 320];
-                        out_row_7 <= buffer_1[447 : 384];
-                        out_row_8 <= buffer_1[511 : 448];
+                        out_row_1 = buffer_1[63 : 0];
+                        out_row_2 = buffer_1[127 : 64];
+                        out_row_3 = buffer_1[191 : 128];
+                        out_row_4 = buffer_1[255 : 192];
+                        out_row_5 = buffer_1[319 : 256];
+                        out_row_6 = buffer_1[383 : 320];
+                        out_row_7 = buffer_1[447 : 384];
+                        out_row_8 = buffer_1[511 : 448];
                     end
                 endcase
             end
         end
         else {out_row_8, out_row_7, out_row_6, out_row_5,
-            out_row_4, out_row_3, out_row_2, out_row_1} <= 0;
+            out_row_4, out_row_3, out_row_2, out_row_1} = 0;
     end
 
     // Input Logic

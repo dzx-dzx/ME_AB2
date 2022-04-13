@@ -1,9 +1,9 @@
 // +FHDR-------------------------------------------------------------------
-// FILE NAME:
-// TYPE:
+// FILE NAME: ME_input_buffer.v
+// TYPE: module
 // DEPARTMENT:
-// AUTHOR:
-// AUTHOR'S EMAIL:
+// AUTHOR: Yaotian Liu
+// AUTHOR'S EMAIL: henry_liu@sjtu.edu.cn
 // ------------------------------------------------------------------------
 // KEYWORDS:
 // ------------------------------------------------------------------------
@@ -11,13 +11,13 @@
 //
 // ------------------------------------------------------------------------
 // REUSE ISSUES
-// Reset Strategy:
-// Clock Domains:
-// Critical Timing:
-// Test Features:
-// Asynchronous I/F:
-// Scan Methodology:
-// Instantiations:
+// Reset Strategy: Synchronous & High valid
+// Clock Domains: Global
+// Critical Timing: ~
+// Test Features: ~
+// Asynchronous I/F: ~
+// Scan Methodology: ~
+// Instantiations: ~
 // -FHDR-------------------------------------------------------------------
 
 module ME_input_buffer (

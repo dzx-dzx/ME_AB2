@@ -1,23 +1,23 @@
 // +FHDR-------------------------------------------------------------------
-// FILE NAME:
-// TYPE:
+// FILE NAME: cur_mem.v
+// TYPE: Test Module
 // DEPARTMENT:
-// AUTHOR:
-// AUTHOR'S EMAIL:
+// AUTHOR: Yaotian Liu
+// AUTHOR'S EMAIL: henry_liu@sjtu.edu.cn
 // ------------------------------------------------------------------------
 // KEYWORDS:
 // ------------------------------------------------------------------------
 // PARAMETERS
-//
+// None
 // ------------------------------------------------------------------------
 // REUSE ISSUES
-// Reset Strategy:
-// Clock Domains:
-// Critical Timing:
-// Test Features:
-// Asynchronous I/F:
-// Scan Methodology:
-// Instantiations:
+// Reset Strategy: ~
+// Clock Domains: ~
+// Critical Timing: ~
+// Test Features: ~
+// Asynchronous I/F: ~
+// Scan Methodology: ~
+// Instantiations: ~
 // -FHDR-------------------------------------------------------------------
 
 module cur_mem (
