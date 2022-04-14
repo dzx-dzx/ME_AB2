@@ -23,6 +23,10 @@ module ME_tb ();
         $dumpvars(0, ME_tb);
     end
 
+    always @(posedge clk) begin
+        if(data_valid) $display("%h at (%h,%h)",MSAD,MSAD_row,MSAD_column);
+    end
+
     // initial begin
     //     $readmemh("cur_test.txt", cur_mem);
     //     $readmemh("ref_test.txt", ref_mem);
@@ -36,6 +40,10 @@ module ME_tb ();
     wire [63:0] ref_in      ;
     wire        need_cur    ;
     wire        need_ref    ;
+    wire [13:0] MSAD        ;
+    wire [ 4:0] MSAD_column ;
+    wire [ 4:0] MSAD_row    ;
+    wire        data_valid  ;
 
     ME U_ME (
         .clk         (clk         ),
@@ -46,7 +54,11 @@ module ME_tb ();
         .cur_mem_addr(cur_mem_addr),
         .ref_mem_addr(ref_mem_addr),
         .cur_mem_en  (cur_mem_en  ),
-        .ref_mem_en  (ref_mem_en  )
+        .ref_mem_en  (ref_mem_en  ),
+        .MSAD        (MSAD        ),
+        .MSAD_column (MSAD_column ),
+        .MSAD_row    (MSAD_row    ),
+        .data_valid  (data_valid  )
     );
 
     cur_mem U_cur_mem (
