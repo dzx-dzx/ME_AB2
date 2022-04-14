@@ -21,7 +21,7 @@
 // -FHDR-------------------------------------------------------------------
 
 module TIMER #(
-    parameter COLD_BOOT_CYCLE  = 20,
+    parameter INTERIM_CYCLE    = 21,
     parameter FULL_CYCLE       = 23,
     parameter OUTPUT_UP_PERIOD = 16
 ) (
@@ -32,75 +32,96 @@ module TIMER #(
     output reg [4:0] valid_count       ,
     output reg       output_low_started
 );
-    localparam COLD_BOOT = 1'b0;
-    localparam COUNT     = 1'b1;
+    localparam INTERIM_BOOT     = 2'b10;
+    localparam INTERIM_SHUTDOWN = 2'b01; //Data can still be valid even after sram_ready is low!
+    localparam COUNT            = 2'b00;
+    localparam SHUTDOWN         = 2'b11;
 
-    reg       state               ;
-    reg       state_next          ;
-    reg [4:0] cold_boot_count     ;
-    reg [4:0] cold_boot_count_next;
-    reg [4:0] valid_count_next    ;
+    reg [1:0] state             ;
+    reg [1:0] state_next        ;
+    reg [4:0] interim_count     ;
+    reg [4:0] interim_count_next;
+    reg [4:0] valid_count_next  ;
 
     always @(posedge clk) begin
         if(rst)
             begin
-                state           <= COLD_BOOT;
-                cold_boot_count <= 0;
-                valid_count     <= 0;
+                state         <= SHUTDOWN;
+                interim_count <= 0;
+                valid_count   <= 0;
             end
         else
             begin
-                state           <= state_next;
-                cold_boot_count <= cold_boot_count_next;
-                valid_count     <= valid_count_next;
+                state         <= state_next;
+                interim_count <= interim_count_next;
+                valid_count   <= valid_count_next;
             end
     end
 
     always @(*) begin
-        if(!en)
+        if(en)
             begin
-                state_next = COLD_BOOT;
+                if(state==SHUTDOWN)begin
+                    state_next = INTERIM_BOOT;
+                end
+                else if(state==COUNT)begin
+                    state_next = COUNT;
+                end
+                else if(state==INTERIM_SHUTDOWN)begin//Actually shouldn't happen.
+                    state_next = INTERIM_BOOT;
+                end
+                else if(state==INTERIM_BOOT)begin
+                    if(interim_count==INTERIM_CYCLE-1)begin
+                        state_next = COUNT;
+                    end
+                    else begin
+                        state_next = INTERIM_BOOT;
+                    end
+                end
+                else state_next=state;
             end
-        else if(state==COLD_BOOT&&cold_boot_count==COLD_BOOT_CYCLE)
-            begin
-                state_next = COUNT;
+        else begin
+            if(state==SHUTDOWN)begin
+                state_next = SHUTDOWN;
             end
-        else if(state==COUNT)state_next=COUNT;
-        else state_next=COLD_BOOT;
-    end
-
-    always @(*) begin
-        if(!en) begin
-            cold_boot_count_next = 0;
+            else if(state==COUNT)begin
+                state_next = INTERIM_SHUTDOWN;
+            end
+            else if(state==INTERIM_BOOT)begin//Actually shouldn't happen.
+                state_next = INTERIM_SHUTDOWN;
+            end
+            else if(state==INTERIM_SHUTDOWN)begin
+                if(interim_count==0)begin
+                    state_next = SHUTDOWN;
+                end
+                else begin
+                    state_next = INTERIM_SHUTDOWN;
+                end
+            end
+            else state_next=state;
         end
-        else if(state==COUNT)
-            begin
-                cold_boot_count_next = 0;
-            end
-        else if(state==COLD_BOOT&&cold_boot_count==COLD_BOOT_CYCLE)
-            begin
-                cold_boot_count_next = 0;
-            end
-        else cold_boot_count_next=cold_boot_count+1;
     end
 
     always @(*) begin
-        if(!en) begin
-            valid_count_next = 0;
-        end
-        else if(state==COLD_BOOT)
-            begin
-                valid_count_next = 0;
-            end
-        else if(state==COUNT&&valid_count==FULL_CYCLE)
-            begin
-                valid_count_next = 0;
-            end
-        else valid_count_next=valid_count+1;
+        case(state)
+            SHUTDOWN         : interim_count_next=0;
+            COUNT            : interim_count_next=interim_count;
+            INTERIM_BOOT     : interim_count_next=(interim_count==INTERIM_CYCLE-1)?interim_count:interim_count+1;
+            INTERIM_SHUTDOWN : interim_count_next=(interim_count==0)?interim_count:interim_count-1;
+            default          : interim_count_next=interim_count;
+        endcase
     end
 
     always @(*) begin
-        o                  = state==COLD_BOOT?0:valid_count<OUTPUT_UP_PERIOD;
-        output_low_started = state==COLD_BOOT?0:valid_count==OUTPUT_UP_PERIOD;
+        case(state)
+            SHUTDOWN,INTERIM_BOOT : valid_count_next = 0;
+            COUNT,INTERIM_SHUTDOWN : valid_count_next = (valid_count==FULL_CYCLE-1)?0:valid_count+1;
+            default : valid_count_next=valid_count;
+        endcase
+    end
+
+    always @(*) begin
+        o                  = (state==INTERIM_BOOT||state==SHUTDOWN)?0:valid_count<OUTPUT_UP_PERIOD;
+        output_low_started = (state==INTERIM_BOOT||state==SHUTDOWN)?0:valid_count==OUTPUT_UP_PERIOD;
     end
 endmodule

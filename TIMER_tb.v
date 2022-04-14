@@ -1,7 +1,7 @@
 module TIMER_tb ();
 
 // Parameters
-    localparam COLD_BOOT_CYCLE  = 20;
+    localparam INTERIM_CYCLE    = 20;
     localparam FULL_CYCLE       = 23;
     localparam OUTPUT_UP_PERIOD = 16;
 
@@ -12,7 +12,7 @@ module TIMER_tb ();
     wire o      ;
 
     TIMER #(
-        .COLD_BOOT_CYCLE (COLD_BOOT_CYCLE ),
+        .INTERIM_CYCLE   (INTERIM_CYCLE   ),
         .FULL_CYCLE      (FULL_CYCLE      ),
         .OUTPUT_UP_PERIOD(                
                           OUTPUT_UP_PERIOD)  
@@ -30,8 +30,8 @@ module TIMER_tb ();
             #1 rst=1;
             #1 rst=0;
             #3 en=1;
-            #200 en=0;
-            #3 en=1;
+            #60 en=0;
+            #30 en=1;
             #20 en=0;
             $finish;
         end
