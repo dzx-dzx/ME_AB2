@@ -15,7 +15,7 @@ module ME_tb ();
         en_i = 1'b0;
         #10 rst = 1'b0;
         #20 en_i = 1'b1;
-        #3000 $finish;
+        #30000 $finish;
     end
 
     initial begin
@@ -24,7 +24,7 @@ module ME_tb ();
     end
 
     always @(posedge clk) begin
-        if(data_valid) $display("%h at (%h,%h)",MSAD,MSAD_row,MSAD_column);
+        if(data_valid) $display("%d at (%d,%d)",MSAD,MSAD_row,MSAD_column);
     end
 
     // initial begin
