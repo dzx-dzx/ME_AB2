@@ -50,19 +50,24 @@ module AD #(
     generate
         for (i = 0; i < PIXELS_IN_BATCH; i = i + 1)
             begin
+                wire [BIT_DEPTH-1:0] ref_subtrahend;
+                assign ref_subtrahend = reference_input[(i+1)*BIT_DEPTH-1:i*BIT_DEPTH];
+                wire negative_subtraction;
+                assign negative_subtraction = ref_subtrahend>current;
                 always @(*)
-                    begin
-                        psad_output[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)]
-                            <= psad_input[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)]+(reference_input[(i+1)*BIT_DEPTH-1:i*BIT_DEPTH]>current?
-                                reference_input[(i+1)*BIT_DEPTH-1:i*BIT_DEPTH]-current
-                                :current-reference_input[(i+1)*BIT_DEPTH-1:i*BIT_DEPTH]);
-                    end
+                begin
+                    psad_output[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)]
+                        <= psad_input[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)]+(
+                            (negative_subtraction?ref_subtrahend : current)-
+                            (negative_subtraction?current : ref_subtrahend)
+                        );
                 end
-        endgenerate
-        // always@(*) begin
-        //     $display("At %t,AD%d%d receives psad %b and reference input %b, outputting %b",$time,DEBUG_I,DEBUG_J,psad_input,reference_input,psad_output);
-        // end
-        wire [                BIT_DEPTH-1:0] reference_input_array [0:PIXELS_IN_BATCH-1];
+            end
+    endgenerate
+    // always@(*) begin
+    //     $display("At %t,AD%d%d receives psad %b and reference input %b, outputting %b",$time,DEBUG_I,DEBUG_J,psad_input,reference_input,psad_output);
+    // end
+    wire [                BIT_DEPTH-1:0] reference_input_array [0:PIXELS_IN_BATCH-1];
     wire [INPUT_PSAD_BITS_PER_PIXEL-1:0] psad_input_array      [0:PIXELS_IN_BATCH-1];
     wire [                BIT_DEPTH-1:0] reference_output_array[0:PIXELS_IN_BATCH-1];
     wire [INPUT_PSAD_BITS_PER_PIXEL-1:0] psad_output_array     [0:PIXELS_IN_BATCH-1];
