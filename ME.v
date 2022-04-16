@@ -146,7 +146,7 @@ module ME #(
     );
 
     wire [PIXELS_IN_BATCH*SAD_BIT_WIDTH-1:0] SAD_batch_interim;
-
+    wire [PIXELS_IN_BATCH*SAD_BIT_WIDTH-1:0] SAD_batch_interim_ff_out;
 
     generate
         for(i=0;i<PIXELS_IN_BATCH;i=i+1)
@@ -165,11 +165,13 @@ module ME #(
             end
     endgenerate
 
+    FF #(.BITS(PIXELS_IN_BATCH*SAD_BIT_WIDTH)) ff_sad (.clk(clk),.in(SAD_batch_interim),.out(SAD_batch_interim_ff_out));
+
     wire [SAD_BIT_WIDTH-1:0] MSAD_interim      ;
     wire [              3:0] MSAD_index_interim;
 
     MIN_16 #(.ELEMENT_BIT_DEPTH(SAD_BIT_WIDTH)) min_16 (
-        .min_array(SAD_batch_interim ),
+        .min_array(SAD_batch_interim_ff_out ),
         .min      (MSAD_interim      ),
         .min_index(MSAD_index_interim)
     );
@@ -177,7 +179,7 @@ module ME #(
     wire       MSAD_data_processing;
     wire [4:0] current_row         ;
     TIMER #(
-        .INTERIM_CYCLE   (16),
+        .INTERIM_CYCLE   (17),
         .FULL_CYCLE      (23),
         .OUTPUT_UP_PERIOD(16)
     ) timer (
