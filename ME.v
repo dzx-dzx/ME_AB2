@@ -179,7 +179,7 @@ module ME #(
     wire       MSAD_data_processing;
     wire [4:0] current_row         ;
     TIMER #(
-        .INTERIM_CYCLE   (17),
+        .INTERIM_CYCLE   (16),
         .FULL_CYCLE      (23),
         .OUTPUT_UP_PERIOD(16)
     ) timer (
