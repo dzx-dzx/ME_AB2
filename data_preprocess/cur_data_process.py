@@ -3,7 +3,7 @@ from dec2hex import dec2hex
 
 print("===== Processing Cur Frame =====")
 
-data = np.load("./data/cur_img.npy").reshape(3840, 2160).T
+data = np.rot90(np.load("./data/cur_img.npy").reshape(3840, 2160), k=-1)
 
 size = 8
 blocks = []
