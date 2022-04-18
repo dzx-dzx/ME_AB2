@@ -30,7 +30,7 @@ module cur_mem (
     initial
         $readmemh("./data_preprocess/data/cur_test.txt", cur_mem);
 
-    always @(*) begin
+    always @(en, addr) begin
         if (en == 0)
             cur_data = 0;
         else begin

@@ -30,7 +30,7 @@ module ref_mem (
     initial
         $readmemh("./data_preprocess/data/ref_test.txt", ref_mem);
 
-    always @(*) begin
+    always @(en, addr) begin
         if (en == 0)
             ref_data = 0;
         else begin
