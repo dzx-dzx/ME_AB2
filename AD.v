@@ -57,7 +57,7 @@ module AD #(
                 always @(*)
                 begin
                     psad_output[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)]
-                        <= psad_input[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)]+(
+                        = psad_input[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)]+(
                             (negative_subtraction?ref_subtrahend : current)-
                             (negative_subtraction?current : ref_subtrahend)
                         );

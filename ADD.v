@@ -27,6 +27,6 @@ module ADD #(parameter BIT_WIDTH=14) (
 );
     always @(*)
         begin
-            element <= element0+element1;
+            element = element0+element1;
         end
 endmodule

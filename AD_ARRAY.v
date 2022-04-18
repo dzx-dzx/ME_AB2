@@ -105,6 +105,6 @@ module AD_ARRAY #(
 
     always @(*)
         begin
-            psad_addend_batch <= psad_addend_internal;
+            psad_addend_batch = psad_addend_internal;
         end
 endmodule
