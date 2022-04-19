@@ -13,7 +13,7 @@ module RefSRAM_tb ();
     wire         sram_ready    ;
     wire         next_block    ;
 
-    wire [31:0] ref_mem_addr;
+    wire read_en;
 
     reg [63:0] ref_in;
     reg        en    ;
@@ -30,20 +30,21 @@ module RefSRAM_tb ();
     end
 
     ref_mem U_ref_mem (
-        .en      (en          ),
-        .addr    (ref_mem_addr),
-        .ref_data(ref_in_i    )
+        .clk     (clk     ),
+        .rst     (rst     ),
+        .read_en (read_en ),
+        .ref_data(ref_in_i)
     );
 
     RefSRAM U_RefSRAM (
-        .clk         (clk         ),
-        .rst         (rst         ),
-        .en          (en          ),
-        .ref_in      (ref_in      ),
-        .ref_out     (ref_out     ),
-        .ref_mem_addr(ref_mem_addr),
-        .sram_ready  (sram_ready  ),
-        .next_block  (next_block  )
+        .clk       (clk       ),
+        .rst       (rst       ),
+        .en        (en        ),
+        .ref_in    (ref_in    ),
+        .ref_out   (ref_out   ),
+        .read_en   (read_en   ),
+        .sram_ready(sram_ready),
+        .next_block(next_block)
     );
 
     initial begin

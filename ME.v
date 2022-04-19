@@ -29,18 +29,16 @@ module ME #(
     parameter SAD_BIT_WIDTH   = 14,
     parameter PSAD_BIT_WIDTH  = 11
 ) (
-    input                           clk         ,
-    input                           rst         ,
-    input                           en_i        ,
-    input  wire [             31:0] cur_in_i    , // 4 pixels
-    input  wire [             63:0] ref_in_i    , // 8 pixels
-    output wire [             31:0] cur_mem_addr,
-    output wire [             31:0] ref_mem_addr,
-    output wire                     cur_mem_en  ,
-    output wire                     ref_mem_en  ,
-    output wire [SAD_BIT_WIDTH-1:0] MSAD        ,
-    output wire [              4:0] MSAD_column ,
-    output wire [              4:0] MSAD_row    ,
+    input                           clk        ,
+    input                           rst        ,
+    input                           en_i       ,
+    input  wire [             31:0] cur_in_i   , // 4 pixels
+    input  wire [             63:0] ref_in_i   , // 8 pixels
+    output wire                     cur_read_en,
+    output wire                     ref_read_en,
+    output wire [SAD_BIT_WIDTH-1:0] MSAD       ,
+    output wire [              4:0] MSAD_column,
+    output wire [              4:0] MSAD_row   ,
     output                          data_valid
 );
 
@@ -59,8 +57,6 @@ module ME #(
         .ref_in_o(ref_in  )
     );
 
-    assign cur_mem_en = en;
-    assign ref_mem_en = en;
 
 // RefSRAM related
     wire [183:0] ref_out   ;
@@ -76,24 +72,24 @@ module ME #(
 // -------------------------
 
     RefSRAM U_RefSRAM (
-        .clk         (clk         ),
-        .rst         (rst         ),
-        .en          (en          ),
-        .ref_in      (ref_in      ),
-        .ref_out     (ref_out     ),
-        .ref_mem_addr(ref_mem_addr),
-        .sram_ready  (sram_ready  ),
-        .next_block  (next_block  )
+        .clk       (clk        ),
+        .rst       (rst        ),
+        .en        (en         ),
+        .ref_in    (ref_in     ),
+        .ref_out   (ref_out    ),
+        .read_en   (ref_read_en),
+        .sram_ready(sram_ready ),
+        .next_block(next_block )
     );
 
     CurBuffer U_CurBuffer (
-        .clk         (clk         ),
-        .rst         (rst         ),
-        .en          (en          ),
-        .next_block  (next_block  ),
-        .cur_in      (cur_in      ),
-        .cur_out     (cur_out     ),
-        .cur_mem_addr(cur_mem_addr)
+        .clk       (clk        ),
+        .rst       (rst        ),
+        .en        (en         ),
+        .next_block(next_block ),
+        .cur_in    (cur_in     ),
+        .cur_out   (cur_out    ),
+        .read_en   (cur_read_en)
     );
 
     wire [1023:0] reference_input_column;
@@ -145,7 +141,7 @@ module ME #(
         .psad_addend_batch     (psad_addend_batch     )
     );
 
-    wire [PIXELS_IN_BATCH*SAD_BIT_WIDTH-1:0] SAD_batch_interim;
+    wire [PIXELS_IN_BATCH*SAD_BIT_WIDTH-1:0] SAD_batch_interim       ;
     wire [PIXELS_IN_BATCH*SAD_BIT_WIDTH-1:0] SAD_batch_interim_ff_out;
 
     generate
@@ -171,9 +167,9 @@ module ME #(
     wire [              3:0] MSAD_index_interim;
 
     MIN_16 #(.ELEMENT_BIT_DEPTH(SAD_BIT_WIDTH)) min_16 (
-        .min_array(SAD_batch_interim_ff_out ),
-        .min      (MSAD_interim      ),
-        .min_index(MSAD_index_interim)
+        .min_array(SAD_batch_interim_ff_out),
+        .min      (MSAD_interim            ),
+        .min_index(MSAD_index_interim      )
     );
 
     wire       MSAD_data_processing;

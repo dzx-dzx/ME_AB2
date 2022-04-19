@@ -21,13 +21,13 @@
 // -FHDR-------------------------------------------------------------------
 
 module CurBuffer (
-    input               clk         ,
-    input               rst         ,
-    input               en          ,
-    input               next_block  , // To send the next_block
-    input       [ 31:0] cur_in      , // 4 pixels
-    output wire [511:0] cur_out     , // 8*8 pixels
-    output reg  [ 31:0] cur_mem_addr
+    input               clk       ,
+    input               rst       ,
+    input               en        ,
+    input               next_block, // To send the next_block
+    input       [ 31:0] cur_in    , // 4 pixels
+    output wire [511:0] cur_out   , // 8*8 pixels
+    output reg          read_en
 );
 
     // 2 buffer. each stores 64 pixels
@@ -42,8 +42,8 @@ module CurBuffer (
     reg       at_inter   ;
     reg [2:0] inter_state;
 
-    reg cold_boot   ;
-    reg read_en     ;
+    reg cold_boot;
+    // reg read_en  ;
     reg read_en_late;
 
     reg [63:0] out_row_1;
@@ -61,10 +61,9 @@ module CurBuffer (
 
     always @(posedge clk) begin
         if (rst) begin
-            cur_mem_addr <= 0;
-            buffer_addr  <= 0;
-            cold_boot    <= 1;
-            read_en      <= 0;
+            buffer_addr <= 0;
+            cold_boot   <= 1;
+            read_en     <= 0;
         end
         else if (en) begin
             if (next_block || cold_boot) begin
@@ -73,7 +72,6 @@ module CurBuffer (
                 read_en     <= 1;
             end
             else if (read_en) begin
-                cur_mem_addr <= cur_mem_addr + 4;
                 if (buffer_addr == 15)
                     read_en <= 0;
                 else

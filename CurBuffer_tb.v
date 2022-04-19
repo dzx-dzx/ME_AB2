@@ -2,15 +2,15 @@
 
 module CurBuffer_tb ();
 
-    reg          clk         ;
-    reg          rst         ;
-    reg          en          ;
-    reg          en_i        ;
-    reg          next_block  ;
-    wire [ 31:0] cur_in_i    ;
-    reg  [ 31:0] cur_in      ;
-    wire [511:0] cur_out     ;
-    wire [ 31:0] cur_mem_addr;
+    reg          clk       ;
+    reg          rst       ;
+    reg          en        ;
+    reg          en_i      ;
+    reg          next_block;
+    wire [ 31:0] cur_in_i  ;
+    reg  [ 31:0] cur_in    ;
+    wire [511:0] cur_out   ;
+    wire         read_en   ;
 
 
     initial begin
@@ -50,19 +50,20 @@ module CurBuffer_tb ();
 
 
     CurBuffer U_CurBuffer (
-        .clk         (clk         ),
-        .rst         (rst         ),
-        .en          (en          ),
-        .next_block  (next_block  ),
-        .cur_in      (cur_in      ),
-        .cur_out     (cur_out     ),
-        .cur_mem_addr(cur_mem_addr)
+        .clk       (clk       ),
+        .rst       (rst       ),
+        .en        (en        ),
+        .next_block(next_block),
+        .cur_in    (cur_in    ),
+        .cur_out   (cur_out   ),
+        .read_en   (read_en   )
     );
 
     cur_mem U_cur_mem (
-        .en      (en          ),
-        .addr    (cur_mem_addr),
-        .cur_data(cur_in_i    )
+        .clk     (clk     ),
+        .rst     (rst     ),
+        .read_en (read_en ),
+        .cur_data(cur_in_i)
     );
 
 

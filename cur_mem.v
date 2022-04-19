@@ -21,24 +21,38 @@
 // -FHDR-------------------------------------------------------------------
 
 module cur_mem (
-    input              en      ,
-    input  wire [31:0] addr    ,
-    output reg  [31:0] cur_data
+    input             clk     ,
+    input             rst     ,
+    input             read_en ,
+    output reg [31:0] cur_data
 );
     reg [7:0] cur_mem[0:8300000];
+
+    reg [31:0] addr;
 
     initial
         $readmemh("./data_preprocess/data/cur_test.txt", cur_mem);
 
-    always @(en, addr) begin
-        if (en == 0)
-            cur_data = 0;
-        else begin
+    always @(posedge clk) begin
+        if (rst)
+            addr <= 0;
+        else if (read_en) begin
+            addr <= addr + 4;
+
+            // cur_data[7:0]   <= cur_mem[addr];
+            // cur_data[15:8]  <= cur_mem[addr + 1];
+            // cur_data[23:16] <= cur_mem[addr + 2];
+            // cur_data[31:24] <= cur_mem[addr + 3];
+        end
+    end
+
+    always @(addr, read_en) begin
+        if (read_en) begin
             cur_data[7:0]   = cur_mem[addr];
             cur_data[15:8]  = cur_mem[addr + 1];
             cur_data[23:16] = cur_mem[addr + 2];
             cur_data[31:24] = cur_mem[addr + 3];
         end
+        else cur_data = 0;
     end
-
 endmodule

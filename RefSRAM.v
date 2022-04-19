@@ -26,17 +26,17 @@
 
 
 module RefSRAM (
-    input               clk         ,
-    input               rst         ,
-    input               en          ,
-    input  wire [ 63:0] ref_in      , // 8 pixels
-    output reg  [183:0] ref_out     , // 23 pixels
-    output reg  [ 31:0] ref_mem_addr,
-    output reg          sram_ready  , // Set high when ref_out is valid.
-    output reg          next_block    // Set high when CurBuffer need to past the next block
+    input               clk       ,
+    input               rst       ,
+    input               en        ,
+    input  wire [ 63:0] ref_in    , // 8 pixels
+    output reg  [183:0] ref_out   , // 23 pixels
+    output wire         read_en   ,
+    output reg          sram_ready, // Set high when ref_out is valid.
+    output reg          next_block  // Set high when CurBuffer need to past the next block
 );
 
-    parameter BLOCKS_PER_LINE       = 482;
+    parameter BLOCKS_PER_LINE       = 272;
     parameter NEXT_CUR_BLOCK_OFFSET = 8  ;
 
     parameter MAX_BLOCK  = 1023;
@@ -154,13 +154,15 @@ module RefSRAM (
     end
 
 
-    // mem_addr
-    always @(posedge clk) begin
-        if(rst)
-            ref_mem_addr <= 0;
-        else if (en && sram_is_written != 4'b0000)
-            ref_mem_addr <= ref_mem_addr + 8;
-    end
+    // read_en
+    assign read_en = en && (sram_is_written != 4'b0000);
+
+    // always @(posedge clk) begin
+    //     if(rst)
+    //         read_en <= 0;
+    //     else if (en && sram_is_written != 4'b0000)
+    //         read_en <= 1;
+    // end
 
     // Next block for CurBuffer
     always @(posedge clk) begin

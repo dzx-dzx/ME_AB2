@@ -1,14 +1,12 @@
-module ME_chip(clk,rst,en_i,cur_in_i,ref_in_i,cur_mem_addr,ref_mem_addr,cur_mem_en,ref_mem_en,MSAD,MSAD_column,MSAD_row,data_valid);
+module ME_chip(clk,rst,en_i,cur_in_i,ref_in_i,cur_read_en,ref_read_en,MSAD,MSAD_column,MSAD_row,data_valid);
 
 input clk;
 input rst;
 input en_i;
 input [31:0] cur_in_i; //4pixels
 input [63:0] ref_in_i; //8pixels
-output [31:0] cur_mem_addr;
-output [31:0] ref_mem_addr;
-output cur_mem_en;
-output ref_mem_en;
+output cur_read_en;
+output ref_read_en;
 output [13:0] MSAD;
 output [4:0] MSAD_column;
 output [4:0] MSAD_row ;
@@ -20,11 +18,9 @@ wire net_rst;
 wire net_en_i;
 wire [31:0] net_cur_in_i;
 wire [63:0] net_ref_in_i;
-wire net_cur_mem_en;
-wire net_ref_mem_en;
+wire net_cur_read_en;
+wire net_ref_read_en;
 wire net_data_valid;
-wire [31:0] net_cur_mem_addr;
-wire [31:0] net_ref_mem_addr;
 wire [13:0] net_MSAD;
 wire [4:0] net_MSAD_column;
 wire [4:0] net_MSAD_row;
@@ -131,73 +127,9 @@ HPDWUW1416DGP
 	HPDWUW1416DGP_ref_in_i63(.PAD(ref_in_i[63]), .C(net_ref_in_i[63]), .IE(1'b1));
 
 HPDWUW1416DGP
-	HPDWUW1416DGP_cur_mem_en(.PAD(cur_mem_en), .I(net_cur_mem_en), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_en(.PAD(ref_mem_en), .I(net_ref_mem_en), .OE(1'b1)),
+	HPDWUW1416DGP_cur_read_en(.PAD(cur_read_en), .I(net_cur_read_en), .OE(1'b1)),
+	HPDWUW1416DGP_ref_read_en(.PAD(ref_read_en), .I(net_ref_read_en), .OE(1'b1)),
 	HPDWUW1416DGP_data_valid(.PAD(data_valid), .I(net_data_valid), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr0(.PAD(cur_mem_addr[0]), .I(net_cur_mem_addr[0]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr1(.PAD(cur_mem_addr[1]), .I(net_cur_mem_addr[1]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr2(.PAD(cur_mem_addr[2]), .I(net_cur_mem_addr[2]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr3(.PAD(cur_mem_addr[3]), .I(net_cur_mem_addr[3]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr4(.PAD(cur_mem_addr[4]), .I(net_cur_mem_addr[4]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr5(.PAD(cur_mem_addr[5]), .I(net_cur_mem_addr[5]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr6(.PAD(cur_mem_addr[6]), .I(net_cur_mem_addr[6]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr7(.PAD(cur_mem_addr[7]), .I(net_cur_mem_addr[7]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr8(.PAD(cur_mem_addr[8]), .I(net_cur_mem_addr[8]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr9(.PAD(cur_mem_addr[9]), .I(net_cur_mem_addr[9]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr10(.PAD(cur_mem_addr[10]), .I(net_cur_mem_addr[10]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr11(.PAD(cur_mem_addr[11]), .I(net_cur_mem_addr[11]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr12(.PAD(cur_mem_addr[12]), .I(net_cur_mem_addr[12]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr13(.PAD(cur_mem_addr[13]), .I(net_cur_mem_addr[13]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr14(.PAD(cur_mem_addr[14]), .I(net_cur_mem_addr[14]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr15(.PAD(cur_mem_addr[15]), .I(net_cur_mem_addr[15]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr16(.PAD(cur_mem_addr[16]), .I(net_cur_mem_addr[16]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr17(.PAD(cur_mem_addr[17]), .I(net_cur_mem_addr[17]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr18(.PAD(cur_mem_addr[18]), .I(net_cur_mem_addr[18]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr19(.PAD(cur_mem_addr[19]), .I(net_cur_mem_addr[19]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr20(.PAD(cur_mem_addr[20]), .I(net_cur_mem_addr[20]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr21(.PAD(cur_mem_addr[21]), .I(net_cur_mem_addr[21]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr22(.PAD(cur_mem_addr[22]), .I(net_cur_mem_addr[22]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr23(.PAD(cur_mem_addr[23]), .I(net_cur_mem_addr[23]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr24(.PAD(cur_mem_addr[24]), .I(net_cur_mem_addr[24]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr25(.PAD(cur_mem_addr[25]), .I(net_cur_mem_addr[25]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr26(.PAD(cur_mem_addr[26]), .I(net_cur_mem_addr[26]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr27(.PAD(cur_mem_addr[27]), .I(net_cur_mem_addr[27]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr28(.PAD(cur_mem_addr[28]), .I(net_cur_mem_addr[28]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr29(.PAD(cur_mem_addr[29]), .I(net_cur_mem_addr[29]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr30(.PAD(cur_mem_addr[30]), .I(net_cur_mem_addr[30]), .OE(1'b1)),
-	HPDWUW1416DGP_cur_mem_addr31(.PAD(cur_mem_addr[31]), .I(net_cur_mem_addr[31]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr0(.PAD(ref_mem_addr[0]), .I(net_ref_mem_addr[0]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr1(.PAD(ref_mem_addr[1]), .I(net_ref_mem_addr[1]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr2(.PAD(ref_mem_addr[2]), .I(net_ref_mem_addr[2]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr3(.PAD(ref_mem_addr[3]), .I(net_ref_mem_addr[3]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr4(.PAD(ref_mem_addr[4]), .I(net_ref_mem_addr[4]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr5(.PAD(ref_mem_addr[5]), .I(net_ref_mem_addr[5]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr6(.PAD(ref_mem_addr[6]), .I(net_ref_mem_addr[6]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr7(.PAD(ref_mem_addr[7]), .I(net_ref_mem_addr[7]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr8(.PAD(ref_mem_addr[8]), .I(net_ref_mem_addr[8]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr9(.PAD(ref_mem_addr[9]), .I(net_ref_mem_addr[9]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr10(.PAD(ref_mem_addr[10]), .I(net_ref_mem_addr[10]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr11(.PAD(ref_mem_addr[11]), .I(net_ref_mem_addr[11]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr12(.PAD(ref_mem_addr[12]), .I(net_ref_mem_addr[12]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr13(.PAD(ref_mem_addr[13]), .I(net_ref_mem_addr[13]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr14(.PAD(ref_mem_addr[14]), .I(net_ref_mem_addr[14]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr15(.PAD(ref_mem_addr[15]), .I(net_ref_mem_addr[15]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr16(.PAD(ref_mem_addr[16]), .I(net_ref_mem_addr[16]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr17(.PAD(ref_mem_addr[17]), .I(net_ref_mem_addr[17]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr18(.PAD(ref_mem_addr[18]), .I(net_ref_mem_addr[18]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr19(.PAD(ref_mem_addr[19]), .I(net_ref_mem_addr[19]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr20(.PAD(ref_mem_addr[20]), .I(net_ref_mem_addr[20]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr21(.PAD(ref_mem_addr[21]), .I(net_ref_mem_addr[21]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr22(.PAD(ref_mem_addr[22]), .I(net_ref_mem_addr[22]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr23(.PAD(ref_mem_addr[23]), .I(net_ref_mem_addr[23]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr24(.PAD(ref_mem_addr[24]), .I(net_ref_mem_addr[24]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr25(.PAD(ref_mem_addr[25]), .I(net_ref_mem_addr[25]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr26(.PAD(ref_mem_addr[26]), .I(net_ref_mem_addr[26]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr27(.PAD(ref_mem_addr[27]), .I(net_ref_mem_addr[27]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr28(.PAD(ref_mem_addr[28]), .I(net_ref_mem_addr[28]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr29(.PAD(ref_mem_addr[29]), .I(net_ref_mem_addr[29]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr30(.PAD(ref_mem_addr[30]), .I(net_ref_mem_addr[30]), .OE(1'b1)),
-	HPDWUW1416DGP_ref_mem_addr31(.PAD(ref_mem_addr[31]), .I(net_ref_mem_addr[31]), .OE(1'b1)),
 	HPDWUW1416DGP_MSAD0(.PAD(MSAD[0]), .I(net_MSAD[0]), .OE(1'b1)),
 	HPDWUW1416DGP_MSAD1(.PAD(MSAD[1]), .I(net_MSAD[1]), .OE(1'b1)),
 	HPDWUW1416DGP_MSAD2(.PAD(MSAD[2]), .I(net_MSAD[2]), .OE(1'b1)),
@@ -223,5 +155,5 @@ HPDWUW1416DGP
 	HPDWUW1416DGP_MSAD_row3(.PAD(MSAD_row[3]), .I(net_MSAD_row[3]), .OE(1'b1)),
 	HPDWUW1416DGP_MSAD_row4(.PAD(MSAD_row[4]), .I(net_MSAD_row[4]), .OE(1'b1));
 
-ME inst_ME(.clk(net_clk),.rst(net_rst),.en_i(net_en_i),.cur_in_i(net_cur_in_i),.ref_in_i(net_ref_in_i),.cur_mem_en(net_cur_mem_en),.ref_mem_en(net_ref_mem_en),.data_valid(net_data_valid),.cur_mem_addr(net_cur_mem_addr),.ref_mem_addr(net_ref_mem_addr),.MSAD(net_MSAD),.MSAD_column(net_MSAD_column),.MSAD_row(net_MSAD_row));
+ME inst_ME(.clk(net_clk),.rst(net_rst),.en_i(net_en_i),.cur_in_i(net_cur_in_i),.ref_in_i(net_ref_in_i),.cur_read_en(net_cur_read_en),.ref_read_en(net_ref_read_en),.data_valid(net_data_valid),.MSAD(net_MSAD),.MSAD_column(net_MSAD_column),.MSAD_row(net_MSAD_row));
 endmodule
