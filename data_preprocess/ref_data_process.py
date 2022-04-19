@@ -3,7 +3,7 @@ from dec2hex import dec2hex
 
 print("===== Processing Ref Frame =====")
 
-data = np.rot90(np.load("./data/ref_img.npy").reshape(3840, 2160), k=-1)
+data = np.load("./data/ref_img.npy").reshape(3840, 2160)
 
 padded_data = np.pad(data, (7, 9))
 print(padded_data.shape)
