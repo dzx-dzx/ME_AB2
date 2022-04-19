@@ -10,21 +10,28 @@ module ME_tb ();
             #5 clk = ~clk;
     end
 
+    integer fd;
+
     initial begin
         rst = 1'b1;
         en_i = 1'b0;
         #10 rst = 1'b0;
         #20 en_i = 1'b1;
-        #30000 $finish;
+        #30000 $fclose(fd);
+        $finish;
     end
 
     initial begin
         $dumpfile("wave.vcd");
         $dumpvars(0, ME_tb);
+        fd = $fopen("./output","w");
     end
 
     always @(posedge clk) begin
-        if(data_valid) $display("%d at (%d,%d)",MSAD,MSAD_row,MSAD_column);
+        if(data_valid) begin
+            $fdisplay(fd,"%d at (%d,%d)",MSAD,MSAD_row,MSAD_column);
+            $display("%d at (%d,%d)",MSAD,MSAD_row,MSAD_column);
+        end
     end
 
     // initial begin
