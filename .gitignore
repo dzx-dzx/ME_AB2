@@ -162,3 +162,6 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 *.vcd
+VME_top
+output
+VME_output
