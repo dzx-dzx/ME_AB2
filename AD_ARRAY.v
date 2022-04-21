@@ -33,23 +33,28 @@ module AD_ARRAY #(
     output reg [(PSAD_BIT_WIDTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_addend_batch
 );
 
-    wire [EDGE_LEN*EDGE_LEN*PIXELS_IN_BATCH*BIT_DEPTH-1:0] reference_in_internal ;
-    wire [EDGE_LEN*EDGE_LEN*PIXELS_IN_BATCH*BIT_DEPTH-1:0] reference_out_internal;
+    wire [PIXELS_IN_BATCH*BIT_DEPTH-1:0] reference_in_internal [0:EDGE_LEN-1][0:EDGE_LEN-1];
+    wire [PIXELS_IN_BATCH*BIT_DEPTH-1:0] reference_out_internal[0:EDGE_LEN-1][0:EDGE_LEN-1];
 
     // wire [(EDGE_LEN+BIT_DEPTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] AD_in_internal;
-    wire [(PSAD_BIT_WIDTH)*EDGE_LEN*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_in_internal ;
-    wire [(PSAD_BIT_WIDTH)*EDGE_LEN*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_out_internal;
+    wire [(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:0] psad_in_internal [0:EDGE_LEN-1][0:EDGE_LEN-1];
+    wire [(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:0] psad_out_internal[0:EDGE_LEN-1][0:EDGE_LEN-1];
 
-    wire [(PSAD_BIT_WIDTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] psad_addend_internal;
+    wire [(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:0] psad_addend_internal[0:EDGE_LEN-1];
 
-    assign psad_in_internal[(PSAD_BIT_WIDTH)*EDGE_LEN*PIXELS_IN_BATCH-1:0] = 0;
+
     // assign AD_in_internal=psad_out_internal[(EDGE_LEN+BIT_DEPTH)*EDGE_LEN*EDGE_LEN*PIXELS_IN_BATCH-1:(EDGE_LEN+BIT_DEPTH)*(EDGE_LEN-1)*EDGE_LEN*PIXELS_IN_BATCH];
 
     genvar i, j;
     generate
+        for(i=0;i<EDGE_LEN;i=i+1)begin
+            assign psad_in_internal[0][i] = 0;
+        end
+    endgenerate
+    generate
         for (i = 0; i < EDGE_LEN; i = i + 1)
             begin
-                assign reference_in_internal[((i+1)*EDGE_LEN)*PIXELS_IN_BATCH*BIT_DEPTH-1:((i+1)*EDGE_LEN-1)*PIXELS_IN_BATCH*BIT_DEPTH] = reference_input_column[(i+1)*PIXELS_IN_BATCH*BIT_DEPTH-1:i*PIXELS_IN_BATCH*BIT_DEPTH];
+                assign reference_in_internal[i][EDGE_LEN-1] = reference_input_column[(i+1)*PIXELS_IN_BATCH*BIT_DEPTH-1:i*PIXELS_IN_BATCH*BIT_DEPTH];
 
                 for (j = 0; j < EDGE_LEN; j = j + 1)
                     begin
@@ -60,11 +65,11 @@ module AD_ARRAY #(
                             .DEBUG_I(i),
                             .DEBUG_J(j)
                         ) ad (
-                            .reference_input (reference_in_internal[(i*EDGE_LEN+j+1)*PIXELS_IN_BATCH*BIT_DEPTH-1:(i*EDGE_LEN+j)*PIXELS_IN_BATCH*BIT_DEPTH] ),
-                            .current         (current_input_complete[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH]                                ),
-                            .psad_input      (psad_in_internal[(i*EDGE_LEN+j)*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH+(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:(i*EDGE_LEN+j)*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH]),
-                            .reference_output(reference_out_internal[(i*EDGE_LEN+j+1)*PIXELS_IN_BATCH*BIT_DEPTH-1:(i*EDGE_LEN+j)*PIXELS_IN_BATCH*BIT_DEPTH]),
-                            .psad_output     (psad_out_internal[(i*EDGE_LEN+j)*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH+(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:(i*EDGE_LEN+j)*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH])
+                            .reference_input (reference_in_internal[i][j] ),
+                            .current         (current_input_complete[(i*EDGE_LEN+j+1)*BIT_DEPTH-1:(i*EDGE_LEN+j)*BIT_DEPTH]),
+                            .psad_input      (psad_in_internal[i][j]),
+                            .reference_output(reference_out_internal[i][j]),
+                            .psad_output     (psad_out_internal[i][j])
                         );
                         if (j > 0)
                             begin
@@ -72,39 +77,47 @@ module AD_ARRAY #(
                                     .BITS(PIXELS_IN_BATCH * BIT_DEPTH)
                                 ) ff_reference (
                                     .clk(clk),
-                                    .in(reference_out_internal[(i*EDGE_LEN+j+1)*PIXELS_IN_BATCH*BIT_DEPTH-1:(i*EDGE_LEN+j)*PIXELS_IN_BATCH*BIT_DEPTH]),
-                                    .out(reference_in_internal[(i*EDGE_LEN+j)*PIXELS_IN_BATCH*BIT_DEPTH-1:(i*EDGE_LEN+j-1)*PIXELS_IN_BATCH*BIT_DEPTH])
+                                    .in(reference_out_internal[i][j]),
+                                    .out(reference_in_internal[i][j-1])
                                 );
                             end
 
                     end
+                for (j = 0; j < EDGE_LEN; j = j + 1)
+                    begin
+                        if (i < EDGE_LEN - 1)
+                            begin
+                                FF #(
+                                    .BITS((PSAD_BIT_WIDTH) * PIXELS_IN_BATCH )
+                                ) ff_psad (
+                                    .clk(clk),
+                                    .in(psad_out_internal[i][j]),
+                                    .out(psad_in_internal[i+1][j])
+                                );
+                            end
+                        else
+                            begin
+                                FF #(
+                                    .BITS((PSAD_BIT_WIDTH) * PIXELS_IN_BATCH )
+                                ) ff_psad (
+                                    .clk(clk),
+                                    .in(psad_out_internal[i][j]),
+                                    .out(psad_addend_internal[j])
+                                );
+                            end
+                    end
 
-                if (i < EDGE_LEN - 1)
-                    begin
-                        FF #(
-                            .BITS((PSAD_BIT_WIDTH) * PIXELS_IN_BATCH * EDGE_LEN)
-                        ) ff_psad (
-                            .clk(clk),
-                            .in(psad_out_internal[(i+1)*EDGE_LEN*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:i*EDGE_LEN*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH]),
-                            .out(psad_in_internal[(i+2)*EDGE_LEN*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:(i+1)*EDGE_LEN*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH])
-                        );
-                    end
-                else
-                    begin
-                        FF #(
-                            .BITS((PSAD_BIT_WIDTH) * PIXELS_IN_BATCH * EDGE_LEN)
-                        ) ff_psad (
-                            .clk(clk),
-                            .in(psad_out_internal[(i+1)*EDGE_LEN*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH-1:i*EDGE_LEN*(PSAD_BIT_WIDTH)*PIXELS_IN_BATCH]),
-                            .out(psad_addend_internal)
-                        );
-                    end
 
             end
     endgenerate
 
-    always @(*)
-        begin
-            psad_addend_batch = psad_addend_internal;
-        end
-endmodule
+    generate
+        for(i = 0; i < EDGE_LEN; i = i + 1)begin
+            always @(psad_addend_internal[i])
+                begin
+                    psad_addend_batch = psad_addend_internal[i];
+                end
+            end
+        endgenerate
+
+    endmodule
