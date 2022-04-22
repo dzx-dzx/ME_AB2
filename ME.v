@@ -166,16 +166,22 @@ module ME #(
     wire [SAD_BIT_WIDTH-1:0] MSAD_interim      ;
     wire [              3:0] MSAD_index_interim;
 
+    wire [SAD_BIT_WIDTH-1:0] MSAD_interim_ff_out      ;
+    wire [              3:0] MSAD_index_interim_ff_out;
+
     MIN_16 #(.ELEMENT_BIT_DEPTH(SAD_BIT_WIDTH)) min_16 (
         .min_array(SAD_batch_interim_ff_out),
         .min      (MSAD_interim            ),
         .min_index(MSAD_index_interim      )
     );
 
+    FF #(.BITS(SAD_BIT_WIDTH)) ff_MSAD_interim (.clk(clk), .in(MSAD_interim), .out(MSAD_interim_ff_out));
+    FF #(.BITS(4)) ff_MSAD_index_interim (.clk(clk), .in(MSAD_index_interim), .out(MSAD_index_interim_ff_out));
+
     wire       MSAD_data_processing;
     wire [4:0] current_row         ;
     TIMER #(
-        .INTERIM_CYCLE   (17),
+        .INTERIM_CYCLE   (18),
         .FULL_CYCLE      (23),
         .OUTPUT_UP_PERIOD(16)
     ) timer (
@@ -189,15 +195,15 @@ module ME #(
 
 
     POST_PROCESSOR #(.SAD_BIT_WIDTH(SAD_BIT_WIDTH)) post_processor (
-        .clk               (clk                 ),
-        .rst               (rst                 ),
-        .MSAD_interim      (MSAD_interim        ),
-        .MSAD_index_interim(MSAD_index_interim  ),
-        .en                (MSAD_data_processing),
-        .current_row       (current_row         ),
-        .MSAD              (MSAD                ),
-        .MSAD_column       (MSAD_column         ),
-        .MSAD_row          (MSAD_row            )
+        .clk               (clk                      ),
+        .rst               (rst                      ),
+        .MSAD_interim      (MSAD_interim_ff_out      ),
+        .MSAD_index_interim(MSAD_index_interim_ff_out),
+        .en                (MSAD_data_processing     ),
+        .current_row       (current_row              ),
+        .MSAD              (MSAD                     ),
+        .MSAD_column       (MSAD_column              ),
+        .MSAD_row          (MSAD_row                 )
     );
 
 endmodule
