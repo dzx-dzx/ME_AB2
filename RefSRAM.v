@@ -48,6 +48,8 @@ module RefSRAM (
 
     reg [4:0] addr;
 
+    reg sram_ready_d;
+
     // All SRAM share the same address
     always @(posedge clk) begin
         if (rst) begin
@@ -95,22 +97,21 @@ module RefSRAM (
     reg [9:0] block_cnt;
     reg       next_line;
 
-    always @(*) begin
-        if (en) begin
-            case (sram_read)
-                4'b0001 :
-                    ref_out = {q_2, q_3, q_4[63:8]};
-                4'b0010 :
-                    ref_out = {q_3, q_4, q_1[63:8]};
-                4'b0100 :
-                    ref_out = {q_4, q_1, q_2[63:8]};
-                4'b1000 :
-                    ref_out = {q_1, q_2, q_3[63:8]};
-                default :
-                    ref_out = 0;
-            endcase
-        end
-        else ref_out = 0;
+    always @(posedge clk) begin
+        if (!rst)
+            if (en) begin
+                sram_ready <= sram_ready_d;
+                case (sram_read)
+                    4'b0001 :
+                        ref_out <= {q_2, q_3, q_4[63:8]};
+                    4'b0010 :
+                        ref_out <= {q_3, q_4, q_1[63:8]};
+                    4'b0100 :
+                        ref_out <= {q_4, q_1, q_2[63:8]};
+                    4'b1000 :
+                        ref_out <= {q_1, q_2, q_3[63:8]};
+                endcase
+            end
     end
 
     always @(posedge clk) begin
@@ -178,17 +179,15 @@ module RefSRAM (
     // First time write sram_4 => Sram is ready
     always @(posedge clk) begin
         if (rst) begin
-            sram_ready <= 0;
+            sram_ready_d <= 0;
         end
         else if (en) begin
             if (next_line) begin
-                sram_ready <= 0;
+                sram_ready_d <= 0;
             end
-            else if (sram_ready == 0 && sram_is_written == 4'b1000) begin
-                sram_ready <= 1;
+            else if (sram_ready_d == 0 && sram_is_written == 4'b1000) begin
+                sram_ready_d <= 1;
             end
-            else
-                sram_ready <= sram_ready;
         end
     end
 

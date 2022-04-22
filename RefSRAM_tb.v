@@ -50,7 +50,7 @@ module RefSRAM_tb ();
     initial begin
         $dumpfile("wave.vcd");
         $dumpvars(0, RefSRAM_tb);
-        #4000 $finish;
+        #5000 $finish;
     end
 
     initial begin
