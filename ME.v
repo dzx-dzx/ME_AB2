@@ -32,14 +32,14 @@ module ME #(
     input                           clk        ,
     input                           rst        ,
     input                           en_i       ,
-    input  wire [             31:0] cur_in_i   , // 4 pixels
-    input  wire [             63:0] ref_in_i   , // 8 pixels
-    output wire                     cur_read_en,
-    output wire                     ref_read_en,
-    output wire [SAD_BIT_WIDTH-1:0] MSAD       ,
-    output wire [              4:0] MSAD_column,
-    output wire [              4:0] MSAD_row   ,
-    output                          data_valid
+    input  wire [             31:0] cur_in_i   , // cur input data, 4 pixels wide
+    input  wire [             63:0] ref_in_i   , // ref input data, 8 pixels wide
+    output wire                     cur_read_en, // to enable cur_mem
+    output wire                     ref_read_en, // to enable ref_mem
+    output wire [SAD_BIT_WIDTH-1:0] MSAD       , // MSAD value
+    output wire [              4:0] MSAD_column, // MSAD coordinate
+    output wire [              4:0] MSAD_row   , // MSAD coordinate
+    output                          data_valid   // whether the output result is valid
 );
 
     wire        en    ;
