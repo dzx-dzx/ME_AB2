@@ -31,7 +31,7 @@ module cur_mem (
     reg [31:0] addr;
 
     initial
-        $readmemh("./data_preprocess/data/cur_test.txt", cur_mem);
+        $readmemh("./data_preprocess/data/cur_processed.txt", cur_mem);
 
     always @(posedge clk) begin
         if (rst)

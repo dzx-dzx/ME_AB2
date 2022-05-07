@@ -80,10 +80,10 @@ module AD #(
                 assign psad_input_array[i]       = psad_input[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)];
                 assign reference_output_array[i] = reference_output[(i+1)*BIT_DEPTH-1:i*BIT_DEPTH];
                 assign psad_output_array[i]      = psad_output[(i+1)*(INPUT_PSAD_BITS_PER_PIXEL)-1:i*(INPUT_PSAD_BITS_PER_PIXEL)];
-                initial begin
-                    $dumpfile("wave.vcd");
-                    $dumpvars(0,reference_input_array[i] ,psad_input_array[i]      ,reference_output_array[i],psad_output_array[i]     );
-                end
+                // initial begin
+                //     $dumpfile("wave.vcd");
+                //     $dumpvars(0,reference_input_array[i] ,psad_input_array[i]      ,reference_output_array[i],psad_output_array[i]     );
+                // end
             end
     endgenerate
 endmodule

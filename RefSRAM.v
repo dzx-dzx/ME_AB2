@@ -36,8 +36,8 @@ module RefSRAM (
     output reg          next_block  // Set high when CurBuffer need to past the next block
 );
 
-    parameter BLOCKS_PER_LINE       = 272;
-    parameter NEXT_CUR_BLOCK_OFFSET = 8  ;
+    parameter BLOCKS_PER_LINE       = 24;
+    parameter NEXT_CUR_BLOCK_OFFSET = 8 ;
 
     parameter MAX_BLOCK  = 1023;
     parameter SRAM_DEPTH = 23  ;

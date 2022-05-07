@@ -31,7 +31,7 @@ module ref_mem (
     reg [31:0] addr;
 
     initial
-        $readmemh("./data_preprocess/data/ref_test.txt", ref_mem);
+        $readmemh("./data_preprocess/data/ref_processed.txt", ref_mem);
 
     always @(posedge clk) begin
         if (rst)
