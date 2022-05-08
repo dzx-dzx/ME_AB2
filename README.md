@@ -29,7 +29,7 @@
 
 此部分为尝试调高输入带宽的相应代码，因结果不理想被弃用。
 
-* /highBW_Curbuffer
+* highBW_Curbuffer/
 
 ## 2 脚本
 
