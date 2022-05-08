@@ -54,6 +54,7 @@ yosys综合脚本。
 ### 3.1 Verilog 芯片 Testbench
 
 * ME_tb.v
+  * 其将结果打印至控制台同时创建并写入结果到`./output`.
 
 ### 3.2 Verilator Testbench
 
