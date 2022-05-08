@@ -165,5 +165,4 @@ cython_debug/
 
 *.vcd
 VME_top
-output
 VME_output

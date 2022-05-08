@@ -16,24 +16,25 @@ module ME_top (
             $finish;
     end
 
+
     always @(posedge clk) begin
         if(data_valid) begin
-            $display("%d at (%d,%d)",MSAD,MSAD_row,MSAD_column);
+            $display("%d at (%d,%d)",MSAD,8 - MSAD_column,MSAD_row - 6);
         end
     end
 
-    wire        cur_mem_en ;
-    wire        ref_mem_en ;
-    wire        cur_read_en;
-    wire        ref_read_en;
-    wire [31:0] cur_in     ;
-    wire [63:0] ref_in     ;
-    wire        need_cur   ;
-    wire        need_ref   ;
-    wire [13:0] MSAD       ;
-    wire [ 4:0] MSAD_column;
-    wire [ 4:0] MSAD_row   ;
-    wire        data_valid ;
+    wire               cur_mem_en ;
+    wire               ref_mem_en ;
+    wire               cur_read_en;
+    wire               ref_read_en;
+    wire        [31:0] cur_in     ;
+    wire        [63:0] ref_in     ;
+    wire               need_cur   ;
+    wire               need_ref   ;
+    wire signed [13:0] MSAD       ;
+    wire signed [ 4:0] MSAD_column;
+    wire signed [ 4:0] MSAD_row   ;
+    wire               data_valid ;
 
     ME U_ME (
         .clk        (clk        ),

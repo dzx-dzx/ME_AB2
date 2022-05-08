@@ -23,10 +23,6 @@ int main(int argc, char** argv, char** env) {
 
     // Prevent unused variable warnings
     if (false && argc && argv && env) {}
-
-    // Create logs/ directory in case we have traces to put under it
-    Verilated::mkdir("logs");
-
     // Construct a VerilatedContext to hold simulation time, etc.
     // Multiple modules (made later below with VME_top) may share the same
     // context to share time, or modules may have different contexts if
@@ -77,7 +73,7 @@ int main(int argc, char** argv, char** env) {
             if (cycle > 10) ME_top->en_i = 1;
             // std::cout << "contextp->time() = " << contextp->time() << std::endl;
 
-            if (cycle == 1000) ME_top->finish_flag = 1;
+            if (cycle == 11000) ME_top->finish_flag = 1;
         }
 
         // Evaluate model
